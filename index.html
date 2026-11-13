@@ -2,7 +2,6 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- Мета-тег для правильного отображения на мобильных устройствах -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Школьное расписание</title>
     
@@ -168,7 +167,7 @@
             padding: 20px; cursor: pointer; user-select: none;
         }
         
-        .header-title-group { display: flex; align-items: center; gap: 16px; flex: 1; /* Чтобы занимало место */ min-width: 0; }
+        .header-title-group { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
         
         .header-icon {
             width: 46px; height: 46px; 
@@ -178,7 +177,7 @@
             border: 1px solid rgba(168, 85, 247, 0.2); flex-shrink: 0;
         }
         
-        .header-info { display: flex; flex-direction: column; min-width: 0; /* Чтобы текст не вылезал */ }
+        .header-info { display: flex; flex-direction: column; min-width: 0; }
         .header-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;}
         .header-info p { 
             font-size: 12px; color: var(--text-muted); font-weight: 500; 
@@ -320,111 +319,37 @@
         #bg-upload { display: none; }
         .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-        /* ========================================= */
         /* === АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ === */
-        /* ========================================= */
         @media (max-width: 480px) {
-            body {
-                padding: 10px; /* Уменьшаем отступы по краям */
-            }
-            .app-container {
-                gap: 12px; /* Уменьшаем расстояние между карточками */
-            }
-            .status-card, .progress-card {
-                padding: 16px;
-            }
-            .big-status {
-                gap: 12px;
-                margin-bottom: 15px;
-            }
-            .big-status-icon {
-                width: 60px;
-                height: 60px;
-            }
-            .big-status-icon i {
-                font-size: 28px;
-            }
-            .big-status-text h2 {
-                font-size: 22px;
-            }
-            .big-status-text p {
-                font-size: 12px;
-            }
-            .collapsible-header, .week-btn-card {
-                padding: 16px;
-            }
-            .header-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-                border-radius: 12px;
-            }
-            .header-title-group {
-                gap: 12px;
-            }
-            .header-info h3 {
-                font-size: 16px;
-            }
-            .header-info p {
-                font-size: 11px;
-            }
-            .header-right-label {
-                font-size: 9px;
-            }
-            .header-right-value {
-                font-size: 13px;
-            }
-            .collapsible-body {
-                padding: 0 16px;
-            }
-            .collapsible-card.open .collapsible-body {
-                padding-bottom: 16px;
-            }
-            .lesson-item {
-                padding: 12px;
-            }
-            .lesson-time {
-                width: 45px;
-                font-size: 13px;
-            }
-            .lesson-time span:last-child {
-                font-size: 11px;
-            }
-            .lesson-icon {
-                margin: 0 10px;
-                font-size: 18px;
-            }
-            .lesson-name {
-                font-size: 14px;
-            }
-            .lesson-num {
-                font-size: 11px;
-            }
-            .info-row {
-                padding: 12px 16px;
-                font-size: 13px;
-                gap: 10px;
-            }
-            .modal-content {
-                padding: 16px;
-                border-radius: 24px;
-                max-height: 90vh;
-            }
-            .week-tab {
-                font-size: 12px;
-                padding: 6px 0;
-            }
-            .modal-lesson-time {
-                width: 50px;
-                font-size: 13px;
-            }
-            .modal-lesson-name {
-                font-size: 14px;
-            }
-            .setting-btn, .toggle-row {
-                padding: 12px;
-                font-size: 13px;
-            }
+            body { padding: 10px; }
+            .app-container { gap: 12px; }
+            .status-card, .progress-card { padding: 16px; }
+            .big-status { gap: 12px; margin-bottom: 15px; }
+            .big-status-icon { width: 60px; height: 60px; }
+            .big-status-icon i { font-size: 28px; }
+            .big-status-text h2 { font-size: 22px; }
+            .big-status-text p { font-size: 12px; }
+            .collapsible-header, .week-btn-card { padding: 16px; }
+            .header-icon { width: 40px; height: 40px; font-size: 20px; border-radius: 12px; }
+            .header-title-group { gap: 12px; }
+            .header-info h3 { font-size: 16px; }
+            .header-info p { font-size: 11px; }
+            .header-right-label { font-size: 9px; }
+            .header-right-value { font-size: 13px; }
+            .collapsible-body { padding: 0 16px; }
+            .collapsible-card.open .collapsible-body { padding-bottom: 16px; }
+            .lesson-item { padding: 12px; }
+            .lesson-time { width: 45px; font-size: 13px; }
+            .lesson-time span:last-child { font-size: 11px; }
+            .lesson-icon { margin: 0 10px; font-size: 18px; }
+            .lesson-name { font-size: 14px; }
+            .lesson-num { font-size: 11px; }
+            .info-row { padding: 12px 16px; font-size: 13px; gap: 10px; }
+            .modal-content { padding: 16px; border-radius: 24px; max-height: 90vh; }
+            .week-tab { font-size: 12px; padding: 6px 0; }
+            .modal-lesson-time { width: 50px; font-size: 13px; }
+            .modal-lesson-name { font-size: 14px; }
+            .setting-btn, .toggle-row { padding: 12px; font-size: 13px; }
         }
     </style>
 </head>
@@ -443,7 +368,7 @@
             </div>
         </div>
 
-        <!-- 1. Карточка Статуса (С ПРОГРЕСС-БАРОМ ВНУТРИ) -->
+        <!-- 1. Карточка Статуса -->
         <div class="card status-card">
             <div class="card-header">
                 <span class="greeting-wrap" id="greeting"></span>
@@ -695,6 +620,9 @@
         let snowInterval;
         function toggleSnow(isEnabled) {
             const container = document.getElementById('snow-container');
+            // Сохраняем в память
+            localStorage.setItem('savedSnow', isEnabled); 
+            
             if (isEnabled) {
                 container.style.display = 'block';
                 snowInterval = setInterval(() => {
@@ -715,40 +643,89 @@
             }
         }
 
-        // === НАСТРОЙКИ ===
+        // === НАСТРОЙКИ (С СОХРАНЕНИЕМ) ===
         function openSettings() { document.getElementById('settingsModal').classList.add('open'); }
         function closeSettings(event) {
             if (!event || event.target.id === 'settingsModal' || event.target.closest('.close-btn')) {
                 document.getElementById('settingsModal').classList.remove('open');
             }
         }
+
         function setTheme(themeClass, btnId) {
             document.body.classList.remove('theme-default', 'theme-newyear');
             document.body.classList.add(themeClass);
             document.querySelectorAll('.setting-btn[id^="btn-theme"]').forEach(b => b.classList.remove('active-theme'));
             document.getElementById(btnId).classList.add('active-theme');
+            
+            // Сохраняем
+            localStorage.setItem('savedTheme', themeClass);
+            localStorage.setItem('savedThemeBtn', btnId);
         }
+
         function setFont(fontClass, btnId) {
             document.body.classList.remove('font-inter', 'font-rubik', 'font-comfortaa', 'font-montserrat', 'font-playfair', 'font-unbounded');
             document.body.classList.add(fontClass);
             document.querySelectorAll('.setting-btn[id^="btn-font"]').forEach(btn => btn.classList.remove('active-font'));
             document.getElementById(btnId).classList.add('active-font');
+            
+            // Сохраняем
+            localStorage.setItem('savedFont', fontClass);
+            localStorage.setItem('savedFontBtn', btnId);
         }
+
         function handleBgUpload(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.body.style.backgroundImage = `url(${e.target.result})`;
+                    const base64Img = e.target.result;
+                    document.body.style.backgroundImage = `url(${base64Img})`;
+                    
+                    // Сохраняем фон (может не сохраниться, если фото слишком тяжелое)
+                    try {
+                        localStorage.setItem('savedBg', base64Img);
+                    } catch(err) {
+                        console.warn("Фото слишком большое для сохранения в память браузера.");
+                        alert("Фото слишком большое для автосохранения. После перезагрузки оно исчезнет.");
+                    }
                     closeSettings();
                 }
                 reader.readAsDataURL(file);
             }
         }
+
         function resetBg() {
             document.body.style.backgroundImage = 'none';
             document.getElementById('bg-upload').value = '';
+            
+            // Удаляем из памяти
+            localStorage.removeItem('savedBg');
+            
             closeSettings();
+        }
+
+        // Восстановление настроек при загрузке
+        function loadSettings() {
+            // Тема
+            const savedTheme = localStorage.getItem('savedTheme');
+            const savedThemeBtn = localStorage.getItem('savedThemeBtn');
+            if (savedTheme && savedThemeBtn) setTheme(savedTheme, savedThemeBtn);
+            
+            // Шрифт
+            const savedFont = localStorage.getItem('savedFont');
+            const savedFontBtn = localStorage.getItem('savedFontBtn');
+            if (savedFont && savedFontBtn) setFont(savedFont, savedFontBtn);
+            
+            // Фон
+            const savedBg = localStorage.getItem('savedBg');
+            if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
+            
+            // Снег
+            const savedSnow = localStorage.getItem('savedSnow');
+            if (savedSnow === 'true') {
+                document.getElementById('snow-toggle').checked = true;
+                toggleSnow(true);
+            }
         }
 
         // === МОДАЛЬНОЕ ОКНО НЕДЕЛИ ===
@@ -936,6 +913,8 @@
             document.getElementById('nextDayCountdown').textContent = countdownText;
         }
 
+        // Запуск
+        loadSettings(); // Сначала загружаем сохраненные настройки
         setInterval(updateUI, 1000);
         updateUI();
     </script>
