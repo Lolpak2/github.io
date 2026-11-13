@@ -127,7 +127,7 @@
         }
         .status-badge i { font-size: 16px; }
 
-        .big-status { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; /* Отступ снизу для прогресс-бара */ }
+        .big-status { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; }
         
         .big-status-icon {
             width: 76px; height: 76px; background-color: var(--bg-item);
@@ -186,7 +186,7 @@
         
         .header-right-info { text-align: right; display: flex; flex-direction: column; justify-content: center; }
         .header-right-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
-        .header-right-value { font-size: 16px; color: var(--accent-purple); font-weight: 700; }
+        .header-right-value { font-size: 15px; color: var(--accent-purple); font-weight: 700; }
         
         .chevron {
             width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
@@ -400,20 +400,20 @@
             <div class="chevron" style="transform: rotate(-90deg);"><i class="ph ph-caret-right"></i></div>
         </div>
 
-        <!-- 5. Сворачиваемая карточка: СЛЕДУЮЩИЙ ДЕНЬ -->
+        <!-- 5. Сворачиваемая карточка: ЗАВТРА / СЛЕДУЮЩИЙ ДЕНЬ -->
         <div class="card collapsible-card" id="nextDayCard">
             <div class="collapsible-header" onclick="toggleCard('nextDayCard')">
                 <div class="header-title-group">
                     <div class="header-icon"><i class="ph ph-calendar-check"></i></div>
                     <div class="header-info">
-                        <h3 id="nextDayName">Понедельник</h3>
-                        <p id="nextDaySubtitle">7 уроков • 08:30–13:50 <i class="ph-fill ph-moon"></i> <i class="ph-fill ph-gear"></i></p>
+                        <h3 id="nextDayName">Следующий день</h3>
+                        <p id="nextDaySubtitle">Загрузка...</p>
                     </div>
                 </div>
                 <div style="display: flex; align-items: center;">
                     <div class="header-right-info">
                         <div class="header-right-label">ДО 1-ГО УРОКА</div>
-                        <div class="header-right-value" id="nextDayCountdown">-- ч -- мин</div>
+                        <div class="header-right-value" id="nextDayCountdown">--</div>
                     </div>
                     <div class="chevron"><i class="ph ph-caret-down"></i></div>
                 </div>
@@ -489,7 +489,7 @@
                         <button class="setting-btn" id="btn-font-rubik" onclick="setFont('font-rubik', 'btn-font-rubik')">Rubik</button>
                         <button class="setting-btn" id="btn-font-montserrat" onclick="setFont('font-montserrat', 'btn-font-montserrat')">Montserrat</button>
                         <button class="setting-btn" id="btn-font-comfortaa" onclick="setFont('font-comfortaa', 'btn-font-comfortaa')">Comfortaa</button>
-                        <button class="setting-btn" id="btn-font-playfair" onclick="setFont('btn-font-playfair', 'btn-font-playfair')">Playfair</button>
+                        <button class="setting-btn" id="btn-font-playfair" onclick="setFont('font-playfair', 'btn-font-playfair')">Playfair</button>
                         <button class="setting-btn" id="btn-font-unbounded" onclick="setFont('font-unbounded', 'btn-font-unbounded')">Unbounded</button>
                     </div>
                 </div>
@@ -727,7 +727,7 @@
             else if (hour >= 18) greetHTML = '<i class="ph ph-moon"></i> Добрый вечер';
             document.getElementById('greeting').innerHTML = greetHTML;
 
-            let dayIdx = now.getDay() - 1; 
+            let dayIdx = now.getDay() - 1; // 0 = Mon, 4 = Fri, -1 = Sun
             const isWeekend = (dayIdx < 0 || dayIdx > 4);
             const currentMinutes = hour * 60 + now.getMinutes();
 
@@ -736,7 +736,6 @@
 
             if (isWeekend) {
                 currentStatus = "Выходной!"; currentStatusDesc = "Отдыхай, завтра в школу"; statusIcon = "ph-tree-palm"; badgeText = '<i class="ph ph-tree-palm"></i> ВЫХОДНОЙ ДЕНЬ';
-                
                 document.getElementById('progressText').textContent = `0/0 уроков`;
                 document.getElementById('progressFill').style.width = `0%`;
                 document.getElementById('startTime').textContent = "--:--";
@@ -762,7 +761,6 @@
                 } else {
                     completedLessons = todayData.lessons.length;
                 }
-
                 document.getElementById('progressText').textContent = `${completedLessons}/${todayData.lessons.length} уроков`;
                 document.getElementById('progressFill').style.width = `${(completedLessons / todayData.lessons.length) * 100}%`;
             }
@@ -775,29 +773,38 @@
             // ---------- 2. БЛОК СЕГОДНЯ ----------
             if (isWeekend) {
                 document.getElementById('todayName').textContent = "Сегодня";
-                document.getElementById('todaySubtitle').innerHTML = "Выходной день <i class='ph-fill ph-tree-palm'></i>";
+                document.getElementById('todaySubtitle').innerHTML = `Выходной день <i class='ph-fill ph-tree-palm'></i>`;
                 document.getElementById('todayLessonsList').innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-muted);">Сегодня уроков нет. Отдыхай!</div>';
             } else {
                 const todayData = weekSchedule[dayIdx];
                 const todayBells = bells[todayData.bellsType];
-                document.getElementById('todayName').textContent = daysOfWeekNames[dayIdx + 1];
-                document.getElementById('todaySubtitle').innerHTML = `${todayData.lessons.length} уроков • ${todayBells[0].start}–${todayBells[todayData.lessons.length-1].end} <i class="ph-fill ph-sun"></i>`;
+                document.getElementById('todayName').textContent = "Сегодня";
+                // Выводим: Понедельник • 7 уроков • 08:30-13:50
+                document.getElementById('todaySubtitle').innerHTML = `<b>${daysOfWeekNames[dayIdx + 1]}</b> • ${todayData.lessons.length} уроков • ${todayBells[0].start}–${todayBells[todayData.lessons.length-1].end}`;
                 renderLessons('todayLessonsList', todayData, currentMinutes, true);
             }
 
             // ---------- 3. БЛОК СЛЕДУЮЩИЙ ДЕНЬ ----------
-            let nextIdx = dayIdx + 1; 
-            if (nextIdx > 4 || nextIdx < 0) nextIdx = 0;
+            // Вычисляем индекс следующего дня
+            let nextIdx = dayIdx + 1;
+            if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; // Если Пт(4)+1=5 или Вс(-1), ставим Пн(0)
             
             const nextDayData = weekSchedule[nextIdx];
             const nextBells = bells[nextDayData.bellsType];
             
-            document.getElementById('nextDayName').textContent = daysOfWeekNames[nextIdx + 1];
-            document.getElementById('nextDaySubtitle').innerHTML = `${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end} <i class="ph-fill ph-moon"></i> <i class="ph-fill ph-gear"></i>`;
+            // Меняем заголовок карточки в зависимости от того, сегодня рабочий день или выходной
+            if (isWeekend) {
+                document.getElementById('nextDayName').textContent = "Следующий день";
+            } else {
+                document.getElementById('nextDayName').textContent = "Завтра"; // Если сегодня Пн, то карточка "Завтра" (Вторник)
+            }
+            
+            // Выводим: Вторник • 7 уроков • 08:30-13:50
+            document.getElementById('nextDaySubtitle').innerHTML = `<b>${daysOfWeekNames[nextIdx + 1]}</b> • ${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end}`;
             
             renderLessons('nextDayLessonsList', nextDayData, -1, false);
 
-            // Считаем время до 1-го урока следующего дня
+            // --- СЧЕТЧИК В ДНЯХ И ЧАСАХ ---
             let daysToAdd = 1;
             if (now.getDay() === 5) daysToAdd = 3; // Пт -> Пн
             else if (now.getDay() === 6) daysToAdd = 2; // Сб -> Пн
@@ -805,13 +812,25 @@
             
             const targetDate = new Date(now);
             targetDate.setDate(now.getDate() + daysToAdd);
-            targetDate.setHours(8, 30, 0, 0); // 1-й урок в 08:30
+            targetDate.setHours(8, 30, 0, 0); // Первый урок в 08:30
 
             const diffMs = targetDate - now;
-            const diffHrsTotal = Math.floor(diffMs / 3600000);
-            const diffMins = Math.floor((diffMs % 3600000) / 60000);
+            
+            // Считаем дни, часы и минуты
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
-            document.getElementById('nextDayCountdown').textContent = `${diffHrsTotal} ч ${diffMins} мин`;
+            let countdownText = "";
+            if (diffDays > 0) {
+                // Если есть дни, показываем "2 дн. 16 ч."
+                countdownText = `${diffDays} дн. ${diffHrs} ч.`;
+            } else {
+                // Если день уже наступил, показываем часы и минуты
+                countdownText = `${diffHrs} ч. ${diffMins} мин.`;
+            }
+
+            document.getElementById('nextDayCountdown').textContent = countdownText;
         }
 
         setInterval(updateUI, 1000);
