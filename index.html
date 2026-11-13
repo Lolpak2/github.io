@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Мета-тег для правильного отображения на мобильных устройствах -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Школьное расписание</title>
     
     <!-- Шрифты -->
@@ -167,30 +168,32 @@
             padding: 20px; cursor: pointer; user-select: none;
         }
         
-        .header-title-group { display: flex; align-items: center; gap: 16px; }
+        .header-title-group { display: flex; align-items: center; gap: 16px; flex: 1; /* Чтобы занимало место */ min-width: 0; }
         
         .header-icon {
             width: 46px; height: 46px; 
             background-color: rgba(168, 85, 247, 0.1); 
             color: var(--accent-purple);
             border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;
-            border: 1px solid rgba(168, 85, 247, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.2); flex-shrink: 0;
         }
         
+        .header-info { display: flex; flex-direction: column; min-width: 0; /* Чтобы текст не вылезал */ }
         .header-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;}
         .header-info p { 
             font-size: 12px; color: var(--text-muted); font-weight: 500; 
             display: flex; align-items: center; gap: 6px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .header-info p i { font-size: 14px; }
         
-        .header-right-info { text-align: right; display: flex; flex-direction: column; justify-content: center; }
+        .header-right-info { text-align: right; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; padding-left: 10px; }
         .header-right-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
-        .header-right-value { font-size: 15px; color: var(--accent-purple); font-weight: 700; }
+        .header-right-value { font-size: 15px; color: var(--accent-purple); font-weight: 700; white-space: nowrap; }
         
         .chevron {
             width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-            transition: transform 0.3s ease; color: var(--text-muted); margin-left: 10px; font-size: 18px;
+            transition: transform 0.3s ease; color: var(--text-muted); margin-left: 10px; font-size: 18px; flex-shrink: 0;
         }
         .collapsible-card.open .chevron { transform: rotate(180deg); }
 
@@ -216,16 +219,16 @@
         }
         .lesson-item.passed { opacity: 0.4; }
         
-        .lesson-time { display: flex; flex-direction: column; width: 55px; font-size: 14px; font-weight: 600; }
+        .lesson-time { display: flex; flex-direction: column; width: 55px; font-size: 14px; font-weight: 600; flex-shrink: 0; }
         .lesson-time span:last-child { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
         
         .lesson-icon { 
             width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; 
-            font-size: 20px; margin: 0 16px; color: var(--text-main);
+            font-size: 20px; margin: 0 16px; color: var(--text-main); flex-shrink: 0;
         }
         
-        .lesson-info { display: flex; flex-direction: column; }
-        .lesson-name { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+        .lesson-info { display: flex; flex-direction: column; min-width: 0; }
+        .lesson-name { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .lesson-num { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
 
         /* --- Инфо строка (Каникулы) --- */
@@ -234,7 +237,7 @@
             background-color: var(--bg-card); border-radius: 18px; border: 1px solid var(--border-color);
             font-size: 14px; font-weight: 500; backdrop-filter: blur(10px);
         }
-        .info-row i { font-size: 20px; color: var(--accent-purple); }
+        .info-row i { font-size: 20px; color: var(--accent-purple); flex-shrink: 0; }
 
         /* --- Модальные окна --- */
         .modal-overlay {
@@ -316,6 +319,113 @@
 
         #bg-upload { display: none; }
         .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+        /* ========================================= */
+        /* === АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ === */
+        /* ========================================= */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px; /* Уменьшаем отступы по краям */
+            }
+            .app-container {
+                gap: 12px; /* Уменьшаем расстояние между карточками */
+            }
+            .status-card, .progress-card {
+                padding: 16px;
+            }
+            .big-status {
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+            .big-status-icon {
+                width: 60px;
+                height: 60px;
+            }
+            .big-status-icon i {
+                font-size: 28px;
+            }
+            .big-status-text h2 {
+                font-size: 22px;
+            }
+            .big-status-text p {
+                font-size: 12px;
+            }
+            .collapsible-header, .week-btn-card {
+                padding: 16px;
+            }
+            .header-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                border-radius: 12px;
+            }
+            .header-title-group {
+                gap: 12px;
+            }
+            .header-info h3 {
+                font-size: 16px;
+            }
+            .header-info p {
+                font-size: 11px;
+            }
+            .header-right-label {
+                font-size: 9px;
+            }
+            .header-right-value {
+                font-size: 13px;
+            }
+            .collapsible-body {
+                padding: 0 16px;
+            }
+            .collapsible-card.open .collapsible-body {
+                padding-bottom: 16px;
+            }
+            .lesson-item {
+                padding: 12px;
+            }
+            .lesson-time {
+                width: 45px;
+                font-size: 13px;
+            }
+            .lesson-time span:last-child {
+                font-size: 11px;
+            }
+            .lesson-icon {
+                margin: 0 10px;
+                font-size: 18px;
+            }
+            .lesson-name {
+                font-size: 14px;
+            }
+            .lesson-num {
+                font-size: 11px;
+            }
+            .info-row {
+                padding: 12px 16px;
+                font-size: 13px;
+                gap: 10px;
+            }
+            .modal-content {
+                padding: 16px;
+                border-radius: 24px;
+                max-height: 90vh;
+            }
+            .week-tab {
+                font-size: 12px;
+                padding: 6px 0;
+            }
+            .modal-lesson-time {
+                width: 50px;
+                font-size: 13px;
+            }
+            .modal-lesson-name {
+                font-size: 14px;
+            }
+            .setting-btn, .toggle-row {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body class="font-inter theme-default">
@@ -727,7 +837,7 @@
             else if (hour >= 18) greetHTML = '<i class="ph ph-moon"></i> Добрый вечер';
             document.getElementById('greeting').innerHTML = greetHTML;
 
-            let dayIdx = now.getDay() - 1; // 0 = Mon, 4 = Fri, -1 = Sun
+            let dayIdx = now.getDay() - 1; 
             const isWeekend = (dayIdx < 0 || dayIdx > 4);
             const currentMinutes = hour * 60 + now.getMinutes();
 
@@ -779,27 +889,23 @@
                 const todayData = weekSchedule[dayIdx];
                 const todayBells = bells[todayData.bellsType];
                 document.getElementById('todayName').textContent = "Сегодня";
-                // Выводим: Понедельник • 7 уроков • 08:30-13:50
                 document.getElementById('todaySubtitle').innerHTML = `<b>${daysOfWeekNames[dayIdx + 1]}</b> • ${todayData.lessons.length} уроков • ${todayBells[0].start}–${todayBells[todayData.lessons.length-1].end}`;
                 renderLessons('todayLessonsList', todayData, currentMinutes, true);
             }
 
             // ---------- 3. БЛОК СЛЕДУЮЩИЙ ДЕНЬ ----------
-            // Вычисляем индекс следующего дня
             let nextIdx = dayIdx + 1;
-            if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; // Если Пт(4)+1=5 или Вс(-1), ставим Пн(0)
+            if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; 
             
             const nextDayData = weekSchedule[nextIdx];
             const nextBells = bells[nextDayData.bellsType];
             
-            // Меняем заголовок карточки в зависимости от того, сегодня рабочий день или выходной
             if (isWeekend) {
                 document.getElementById('nextDayName').textContent = "Следующий день";
             } else {
-                document.getElementById('nextDayName').textContent = "Завтра"; // Если сегодня Пн, то карточка "Завтра" (Вторник)
+                document.getElementById('nextDayName').textContent = "Завтра"; 
             }
             
-            // Выводим: Вторник • 7 уроков • 08:30-13:50
             document.getElementById('nextDaySubtitle').innerHTML = `<b>${daysOfWeekNames[nextIdx + 1]}</b> • ${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end}`;
             
             renderLessons('nextDayLessonsList', nextDayData, -1, false);
@@ -812,21 +918,18 @@
             
             const targetDate = new Date(now);
             targetDate.setDate(now.getDate() + daysToAdd);
-            targetDate.setHours(8, 30, 0, 0); // Первый урок в 08:30
+            targetDate.setHours(8, 30, 0, 0); 
 
             const diffMs = targetDate - now;
             
-            // Считаем дни, часы и минуты
             const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
             const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
             let countdownText = "";
             if (diffDays > 0) {
-                // Если есть дни, показываем "2 дн. 16 ч."
                 countdownText = `${diffDays} дн. ${diffHrs} ч.`;
             } else {
-                // Если день уже наступил, показываем часы и минуты
                 countdownText = `${diffHrs} ч. ${diffMins} мин.`;
             }
 
