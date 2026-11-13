@@ -381,7 +381,7 @@
                     const mskString = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
                     return new Date(mskString);
                 } catch(e) {
-                    return new Date(); // Если браузер старый, берем локальное время
+                    return new Date();
                 }
             }
 
@@ -483,7 +483,7 @@
                         toggleSnow(true); 
                     }
                 } catch(e) {
-                    console.warn("Не удалось загрузить настройки (возможно, запрещен localStorage)");
+                    console.warn("Не удалось загрузить настройки");
                 }
             }
 
@@ -534,8 +534,13 @@
                 let greetHTML = '<i class="ph ph-sun"></i> Доброе утро';
                 if (hour >= 12 && hour < 18) greetHTML = '<i class="ph ph-sun-horizon"></i> Добрый день'; else if (hour >= 18) greetHTML = '<i class="ph ph-moon"></i> Добрый вечер';
                 document.getElementById('greeting').innerHTML = greetHTML;
-                let dayIdx = now.getDay() - 1; const isWeekend = (dayIdx < 0 || dayIdx > 4); const currentMinutes = hour * 60 + now.getMinutes();
+                
+                let dayIdx = now.getDay() - 1; 
+                const isWeekend = (dayIdx < 0 || dayIdx > 4); 
+                const currentMinutes = hour * 60 + now.getMinutes();
+                
                 let currentStatus = "Свобода!", currentStatusDesc = "Уроки на сегодня закончились", statusIcon = "ph-confetti", badgeText = '<i class="ph ph-confetti"></i> УРОКИ ЗАКОНЧИЛИСЬ', completedLessons = 0;
+                
                 if (isWeekend) {
                     currentStatus = "Выходной!"; currentStatusDesc = "Отдыхай, завтра в школу"; statusIcon = "ph-tree-palm"; badgeText = '<i class="ph ph-tree-palm"></i> ВЫХОДНОЙ ДЕНЬ';
                     document.getElementById('progressText').textContent = `0/0 уроков`; document.getElementById('progressFill').style.width = `0%`; document.getElementById('startTime').textContent = "--:--"; document.getElementById('endTime').textContent = "--:--";
@@ -553,6 +558,7 @@
                     } else { completedLessons = todayData.lessons.length; }
                     document.getElementById('progressText').textContent = `${completedLessons}/${todayData.lessons.length} уроков`; document.getElementById('progressFill').style.width = `${(completedLessons / todayData.lessons.length) * 100}%`;
                 }
+                
                 document.getElementById('statusTitle').textContent = currentStatus; document.getElementById('statusDesc').textContent = currentStatusDesc;
                 document.getElementById('statusIcon').innerHTML = `<i class="ph ${statusIcon}"></i>`; document.getElementById('statusBadge').innerHTML = badgeText;
 
@@ -566,9 +572,23 @@
                     renderLessons('todayLessonsList', todayData, currentMinutes, true);
                 }
 
-                let nextIdx = dayIdx + 1; if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; 
-                const nextDayData = weekSchedule[nextIdx]; const nextBells = bells[nextDayData.bellsType];
-                if (isWeekend) document.getElementById('nextDayName').textContent = "Следующий день"; else document.getElementById('nextDayName').textContent = "Завтра"; 
+                // ---------- ИСПРАВЛЕННАЯ ЛОГИКА СЛЕДУЮЩЕГО ДНЯ ----------
+                let nextIdx = dayIdx + 1; 
+                if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; 
+                
+                const nextDayData = weekSchedule[nextIdx]; 
+                const nextBells = bells[nextDayData.bellsType];
+                
+                let nextDayTitle = "Следующий день";
+                if (dayIdx >= 0 && dayIdx < 4) {
+                    nextDayTitle = "Завтра"; // Если Пн-Чт
+                } else if (dayIdx === 4) {
+                    nextDayTitle = "В понедельник"; // Если Пятница
+                } else {
+                    nextDayTitle = "Следующий день"; // Выходные
+                }
+                
+                document.getElementById('nextDayName').textContent = nextDayTitle;
                 document.getElementById('nextDaySubtitle').innerHTML = `<b>${daysOfWeekNames[nextIdx + 1]}</b> • ${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end}`;
                 renderLessons('nextDayLessonsList', nextDayData, -1, false);
 
@@ -586,7 +606,6 @@
             setInterval(updateUI, 1000);
             
         } catch(e) {
-            // Если что-то пошло не так, выводим ошибку прямо на экран
             document.getElementById('statusTitle').textContent = "Ошибка!";
             document.getElementById('statusDesc').textContent = e.message;
             document.getElementById('statusDesc').style.color = "red";
