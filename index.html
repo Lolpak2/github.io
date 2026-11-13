@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Школьное расписание</title>
     
+    <!-- Шрифты и иконки -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,15 +14,22 @@
     <style>
         :root {
             --bg-main: #0f0f13; --bg-card: rgba(26, 26, 33, 0.95); --bg-item: #212129;
-            --text-main: #ffffff; --text-muted: #8b8b9a; --accent-purple: #a855f7;
+            --text-main: #ffffff; --text-muted: #8b8b9a; --accent-purple: #a855f7; 
             --accent-green: #22c55e; --accent-blue: #3b82f6; --border-color: #2f2f3b;
             --font-family: 'Inter', sans-serif;
         }
+        /* 🎄 Новогодняя тема 🎄 */
         body.theme-newyear {
-            --bg-main: #06120e; --bg-card: rgba(13, 33, 26, 0.95); --bg-item: #143326;
-            --text-main: #f0fdf4; --text-muted: #86efac; --accent-purple: #ef4444; 
-            --accent-green: #fbbf24; --accent-blue: #10b981; --border-color: #1e4d3a;
+            --bg-main: #0a1410; --bg-card: rgba(18, 33, 26, 0.95); --bg-item: #172e22;
+            --text-main: #f2fbf5; --text-muted: #81a690; --accent-purple: #eab308; 
+            --accent-green: #10b981; --accent-blue: #34d399; --border-color: #234533;
         }
+        body.theme-newyear .date-badge { background-color: rgba(234, 179, 8, 0.1); border-color: rgba(234, 179, 8, 0.2); color: var(--accent-purple); }
+        body.theme-newyear .status-badge, body.theme-newyear .header-icon { background-color: rgba(234, 179, 8, 0.15); color: var(--accent-purple); border-color: rgba(234, 179, 8, 0.2); }
+        body.theme-newyear .big-status-icon { background-color: rgba(234, 179, 8, 0.05); border-color: rgba(234, 179, 8, 0.2); }
+        body.theme-newyear .big-status-icon i { color: var(--accent-purple); }
+        body.theme-newyear .status-progress-bar-fill { background: linear-gradient(90deg, #10b981, #eab308); }
+
         body.font-inter { --font-family: 'Inter', sans-serif; }
         body.font-rubik { --font-family: 'Rubik', sans-serif; }
         body.font-comfortaa { --font-family: 'Comfortaa', cursive; }
@@ -31,29 +39,23 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); -webkit-tap-highlight-color: transparent; }
         body {
-            background-color: var(--bg-main); color: var(--text-main);
-            display: flex; justify-content: center; padding: 20px; min-height: 100vh;
-            background-size: cover; background-position: center; background-attachment: fixed;
-            position: relative; transition: background-color 0.5s ease, color 0.3s ease;
+            background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center;
+            padding: 20px; min-height: 100vh; background-size: cover; background-position: center;
+            background-attachment: fixed; position: relative; transition: background-color 0.5s ease, color 0.3s ease;
         }
         body::before {
             content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(10, 10, 15, 0.75); z-index: -1;
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); pointer-events: none;
+            background: rgba(10, 10, 15, 0.75); z-index: -1; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); pointer-events: none; transition: background 0.5s ease;
         }
-        body.theme-newyear::before { background: rgba(2, 10, 6, 0.85); }
+        body.theme-newyear::before { background: rgba(4, 15, 10, 0.8); }
 
         #snow-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998; overflow: hidden; display: none; }
-        .snowflake { position: absolute; top: -10px; color: #fff; font-size: 1.2em; user-select: none; pointer-events: none; animation: fall linear forwards; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .snowflake { position: absolute; top: -10px; color: #fff; user-select: none; pointer-events: none; animation: fall linear forwards; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
         .app-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; padding-bottom: 40px; position: relative; z-index: 1; }
         .header { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; padding: 0 5px; }
-        .logo-placeholder {
-            width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s;
-        }
+        .logo-placeholder { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
         .logo-placeholder:active { transform: scale(0.9); }
         .header-text h1 { font-size: 19px; font-weight: 700; }
         .header-text p { font-size: 13px; color: var(--text-muted); }
@@ -91,6 +93,7 @@
         .header-right-value { font-size: 15px; color: var(--accent-purple); font-weight: 700; white-space: nowrap; }
         .chevron { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; color: var(--text-muted); margin-left: 10px; font-size: 18px; flex-shrink: 0; }
         .collapsible-card.open .chevron { transform: rotate(180deg); }
+
         .collapsible-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 0 20px; }
         .collapsible-card.open .collapsible-body { max-height: 1500px; padding-bottom: 20px; }
 
@@ -355,204 +358,240 @@
     </div>
 
     <script>
-        const bells = {
-            type1: [ { num: 1, start: "08:30", end: "09:00" }, { num: 2, start: "09:10", end: "09:50" }, { num: 3, start: "10:00", end: "10:40" }, { num: 4, start: "10:50", end: "11:30" }, { num: 5, start: "11:40", end: "12:20" }, { num: 6, start: "12:25", end: "13:05" }, { num: 7, start: "13:10", end: "13:50" } ],
-            type2: [ { num: 1, start: "08:30", end: "09:10" }, { num: 2, start: "09:20", end: "10:00" }, { num: 3, start: "10:10", end: "10:50" }, { num: 4, start: "11:00", end: "11:40" }, { num: 5, start: "11:50", end: "12:30" }, { num: 6, start: "12:35", end: "13:15" }, { num: 7, start: "13:20", end: "14:00" } ]
-        };
+        try {
+            const bells = {
+                type1: [ { num: 1, start: "08:30", end: "09:00" }, { num: 2, start: "09:10", end: "09:50" }, { num: 3, start: "10:00", end: "10:40" }, { num: 4, start: "10:50", end: "11:30" }, { num: 5, start: "11:40", end: "12:20" }, { num: 6, start: "12:25", end: "13:05" }, { num: 7, start: "13:10", end: "13:50" } ],
+                type2: [ { num: 1, start: "08:30", end: "09:10" }, { num: 2, start: "09:20", end: "10:00" }, { num: 3, start: "10:10", end: "10:50" }, { num: 4, start: "11:00", end: "11:40" }, { num: 5, start: "11:50", end: "12:30" }, { num: 6, start: "12:35", end: "13:15" }, { num: 7, start: "13:20", end: "14:00" } ]
+            };
 
-        const weekSchedule = {
-            0: { bellsType: 'type1', lessons: [ { name: "Разговор о важном", icon: "ph-chat-teardrop-text" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Физ-ра", icon: "ph-gear" }, { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Вероятность и статистика", icon: "ph-chart-bar" }, { name: "Рус.яз.", icon: "ph-book-open-text" } ]},
-            1: { bellsType: 'type2', lessons: [ { name: "Ист.", icon: "ph-bank" }, { name: "Рус.яз.", icon: "ph-book-open-text" }, { name: "Англ.яз./2", icon: "ph-translate" }, { name: "Физ.", icon: "ph-atom" }, { name: "Геом.", icon: "ph-compass" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Лит-ра", icon: "ph-books" } ]},
-            2: { bellsType: 'type2', lessons: [ { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Рус.яз.", icon: "ph-book-open-text" }, { name: "Ист.", icon: "ph-bank" }, { name: "Хим.", icon: "ph-flask" }, { name: "Черч.", icon: "ph-pencil-ruler" }, { name: "Техн./Гр.2", icon: "ph-wrench" }, { name: "Алг.", icon: "ph-math-operations" } ]},
-            3: { bellsType: 'type1', lessons: [ { name: "Профминимум", icon: "ph-briefcase" }, { name: "Лит-ра", icon: "ph-books" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Инф./гр 2", icon: "ph-laptop" }, { name: "ОБЗР", icon: "ph-shield-check" }, { name: "Геом.", icon: "ph-compass" }, { name: "Англ.яз./2", icon: "ph-translate" } ]},
-            4: { bellsType: 'type2', lessons: [ { name: "Хим.", icon: "ph-flask" }, { name: "Ист.", icon: "ph-bank" }, { name: "Муз.", icon: "ph-music-notes" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Англ.яз./2", icon: "ph-translate" } ]}
-        };
+            const weekSchedule = {
+                0: { bellsType: 'type1', lessons: [ { name: "Разговор о важном", icon: "ph-chat-teardrop-text" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Физ-ра", icon: "ph-gear" }, { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Вероятность и статистика", icon: "ph-chart-bar" }, { name: "Рус.яз.", icon: "ph-book-open-text" } ]},
+                1: { bellsType: 'type2', lessons: [ { name: "Ист.", icon: "ph-bank" }, { name: "Рус.яз.", icon: "ph-book-open-text" }, { name: "Англ.яз./2", icon: "ph-translate" }, { name: "Физ.", icon: "ph-atom" }, { name: "Геом.", icon: "ph-compass" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Лит-ра", icon: "ph-books" } ]},
+                2: { bellsType: 'type2', lessons: [ { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Рус.яз.", icon: "ph-book-open-text" }, { name: "Ист.", icon: "ph-bank" }, { name: "Хим.", icon: "ph-flask" }, { name: "Черч.", icon: "ph-pencil-ruler" }, { name: "Техн./Гр.2", icon: "ph-wrench" }, { name: "Алг.", icon: "ph-math-operations" } ]},
+                3: { bellsType: 'type1', lessons: [ { name: "Профминимум", icon: "ph-briefcase" }, { name: "Лит-ра", icon: "ph-books" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Инф./гр 2", icon: "ph-laptop" }, { name: "ОБЗР", icon: "ph-shield-check" }, { name: "Геом.", icon: "ph-compass" }, { name: "Англ.яз./2", icon: "ph-translate" } ]},
+                4: { bellsType: 'type2', lessons: [ { name: "Хим.", icon: "ph-flask" }, { name: "Ист.", icon: "ph-bank" }, { name: "Муз.", icon: "ph-music-notes" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Англ.яз./2", icon: "ph-translate" } ]}
+            };
 
-        const daysOfWeekNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
-        const shortDays = ["Пн", "Вт", "Ср", "Чт", "Пт"];
-        let selectedTabDay = 0;
+            const daysOfWeekNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+            const shortDays = ["Пн", "Вт", "Ср", "Чт", "Пт"];
+            let selectedTabDay = 0;
 
-        function getMoscowDate() {
-            const mskString = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
-            return new Date(mskString);
-        }
-        function timeToMinutes(timeStr) {
-            const [h, m] = timeStr.split(':').map(Number);
-            return h * 60 + m;
-        }
-        function toggleCard(cardId) { document.getElementById(cardId).classList.toggle('open'); }
-
-        let snowInterval;
-        function toggleSnow(isEnabled) {
-            const container = document.getElementById('snow-container');
-            localStorage.setItem('savedSnow', isEnabled); 
-            if (isEnabled) {
-                container.style.display = 'block';
-                snowInterval = setInterval(() => {
-                    const flake = document.createElement('div');
-                    flake.classList.add('snowflake');
-                    flake.innerHTML = ['❄️', '❅', '❆', '•'][Math.floor(Math.random() * 4)];
-                    flake.style.left = Math.random() * 100 + 'vw';
-                    flake.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    flake.style.opacity = Math.random() * 0.5 + 0.5;
-                    flake.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
-                    container.appendChild(flake);
-                    setTimeout(() => { flake.remove(); }, 5000);
-                }, 150);
-            } else {
-                container.style.display = 'none';
-                clearInterval(snowInterval);
-                container.innerHTML = '';
-            }
-        }
-
-        function openSettings() { document.getElementById('settingsModal').classList.add('open'); }
-        function closeSettings(event) {
-            if (!event || event.target.id === 'settingsModal' || event.target.closest('.close-btn')) {
-                document.getElementById('settingsModal').classList.remove('open');
-            }
-        }
-        function setTheme(themeClass, btnId) {
-            document.body.classList.remove('theme-default', 'theme-newyear');
-            document.body.classList.add(themeClass);
-            document.querySelectorAll('.setting-btn[id^="btn-theme"]').forEach(b => b.classList.remove('active-theme'));
-            document.getElementById(btnId).classList.add('active-theme');
-            localStorage.setItem('savedTheme', themeClass);
-            localStorage.setItem('savedThemeBtn', btnId);
-        }
-        function setFont(fontClass, btnId) {
-            document.body.classList.remove('font-inter', 'font-rubik', 'font-comfortaa', 'font-montserrat', 'font-playfair', 'font-unbounded');
-            document.body.classList.add(fontClass);
-            document.querySelectorAll('.setting-btn[id^="btn-font"]').forEach(btn => btn.classList.remove('active-font'));
-            document.getElementById(btnId).classList.add('active-font');
-            localStorage.setItem('savedFont', fontClass);
-            localStorage.setItem('savedFontBtn', btnId);
-        }
-        function handleBgUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Img = e.target.result;
-                    document.body.style.backgroundImage = `url(${base64Img})`;
-                    try { localStorage.setItem('savedBg', base64Img); } catch(err) { alert("Фото слишком большое для автосохранения."); }
-                    closeSettings();
+            function getMoscowDate() {
+                try {
+                    const mskString = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
+                    return new Date(mskString);
+                } catch(e) {
+                    return new Date(); // Если браузер старый, берем локальное время
                 }
-                reader.readAsDataURL(file);
             }
-        }
-        function resetBg() {
-            document.body.style.backgroundImage = 'none';
-            document.getElementById('bg-upload').value = '';
-            localStorage.removeItem('savedBg');
-            closeSettings();
-        }
-        function loadSettings() {
-            const savedTheme = localStorage.getItem('savedTheme');
-            const savedThemeBtn = localStorage.getItem('savedThemeBtn');
-            if (savedTheme && savedThemeBtn) setTheme(savedTheme, savedThemeBtn);
-            const savedFont = localStorage.getItem('savedFont');
-            const savedFontBtn = localStorage.getItem('savedFontBtn');
-            if (savedFont && savedFontBtn) setFont(savedFont, savedFontBtn);
-            const savedBg = localStorage.getItem('savedBg');
-            if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
-            const savedSnow = localStorage.getItem('savedSnow');
-            if (savedSnow === 'true') { document.getElementById('snow-toggle').checked = true; toggleSnow(true); }
-        }
 
-        function openWeekModal() {
-            const now = getMoscowDate(); let dayIdx = now.getDay() - 1;
-            if (dayIdx < 0 || dayIdx > 4) dayIdx = 0;
-            selectedTabDay = dayIdx; renderWeekModal(); document.getElementById('weekModal').classList.add('open');
-        }
-        function closeWeekModal(event) {
-            if (!event || event.target.id === 'weekModal' || event.target.closest('.close-btn')) document.getElementById('weekModal').classList.remove('open');
-        }
-        function renderWeekModal() {
-            const tabsContainer = document.getElementById('weekTabs'); const listContainer = document.getElementById('modalLessonsList');
-            tabsContainer.innerHTML = ''; const now = getMoscowDate(); let todayIdx = now.getDay() - 1;
-            for (let i = 0; i < 5; i++) {
-                const btn = document.createElement('button');
-                btn.className = `week-tab ${i === selectedTabDay ? 'active' : ''} ${i === todayIdx ? 'today' : ''}`;
-                btn.textContent = shortDays[i]; btn.onclick = () => { selectedTabDay = i; renderWeekModal(); };
-                tabsContainer.appendChild(btn);
+            function timeToMinutes(timeStr) {
+                const [h, m] = timeStr.split(':').map(Number);
+                return h * 60 + m;
             }
-            const dayData = weekSchedule[selectedTabDay]; const currentBells = bells[dayData.bellsType]; listContainer.innerHTML = '';
-            dayData.lessons.forEach((lesson, idx) => {
-                const time = currentBells[idx]; const item = document.createElement('div'); item.className = 'modal-lesson-item';
-                item.innerHTML = `<div class="modal-lesson-time"><span>${time.start}</span><span>${time.end}</span></div><div class="modal-lesson-icon"><i class="ph ${lesson.icon}"></i></div><div class="modal-lesson-info"><span class="modal-lesson-name">${lesson.name}</span><span class="modal-lesson-num">Урок ${idx + 1}</span></div>`;
-                listContainer.appendChild(item);
-            });
-        }
 
-        function renderLessons(containerId, dayData, currentMinutes, isCurrentDay) {
-            const container = document.getElementById(containerId); const currentBells = bells[dayData.bellsType]; container.innerHTML = '';
-            dayData.lessons.forEach((lesson, i) => {
-                const bell = currentBells[i]; const item = document.createElement('div'); item.className = 'lesson-item';
-                if (isCurrentDay) {
-                    if (currentMinutes >= timeToMinutes(bell.end)) item.classList.add('passed');
-                    else if (currentMinutes >= timeToMinutes(bell.start) && currentMinutes < timeToMinutes(bell.end)) item.classList.add('active');
+            window.toggleCard = function(cardId) { 
+                document.getElementById(cardId).classList.toggle('open'); 
+            }
+
+            let snowInterval;
+            window.toggleSnow = function(isEnabled) {
+                const container = document.getElementById('snow-container');
+                try { localStorage.setItem('savedSnow', isEnabled); } catch(e){}
+                
+                if (isEnabled) {
+                    container.style.display = 'block';
+                    snowInterval = setInterval(() => {
+                        const flake = document.createElement('div');
+                        flake.classList.add('snowflake');
+                        flake.innerHTML = ['❄️', '❅', '❆', '•'][Math.floor(Math.random() * 4)];
+                        flake.style.left = Math.random() * 100 + 'vw';
+                        flake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                        flake.style.opacity = Math.random() * 0.5 + 0.5;
+                        flake.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
+                        container.appendChild(flake);
+                        setTimeout(() => { flake.remove(); }, 5000);
+                    }, 150);
+                } else {
+                    container.style.display = 'none';
+                    clearInterval(snowInterval);
+                    container.innerHTML = '';
                 }
-                item.innerHTML = `<div class="lesson-time"><span>${bell.start}</span><span>${bell.end}</span></div><div class="lesson-icon"><i class="ph ${lesson.icon}"></i></div><div class="lesson-info"><span class="lesson-name">${lesson.name}</span><span class="lesson-num">Урок ${i + 1}</span></div>`;
-                container.appendChild(item);
-            });
-        }
+            }
 
-        function updateUI() {
-            const now = getMoscowDate(); document.getElementById('currentTime').textContent = now.toLocaleTimeString('ru-RU');
-            const months = ["ЯНВАРЯ", "ФЕВРАЛЯ", "МАРТА", "АПРЕЛЯ", "МАЯ", "ИЮНЯ", "ИЮЛЯ", "АВГУСТА", "СЕНТЯБРЯ", "ОКТЯБРЯ", "НОЯБРЯ", "ДЕКАБРЯ"];
-            document.getElementById('currentDate').textContent = `${daysOfWeekNames[now.getDay()].toUpperCase()}, ${now.getDate()} ${months[now.getMonth()]}`;
-            const hour = now.getHours();
-            let greetHTML = '<i class="ph ph-sun"></i> Доброе утро';
-            if (hour >= 12 && hour < 18) greetHTML = '<i class="ph ph-sun-horizon"></i> Добрый день'; else if (hour >= 18) greetHTML = '<i class="ph ph-moon"></i> Добрый вечер';
-            document.getElementById('greeting').innerHTML = greetHTML;
-            let dayIdx = now.getDay() - 1; const isWeekend = (dayIdx < 0 || dayIdx > 4); const currentMinutes = hour * 60 + now.getMinutes();
-            let currentStatus = "Свобода!", currentStatusDesc = "Уроки на сегодня закончились", statusIcon = "ph-confetti", badgeText = '<i class="ph ph-confetti"></i> УРОКИ ЗАКОНЧИЛИСЬ', completedLessons = 0;
-            if (isWeekend) {
-                currentStatus = "Выходной!"; currentStatusDesc = "Отдыхай, завтра в школу"; statusIcon = "ph-tree-palm"; badgeText = '<i class="ph ph-tree-palm"></i> ВЫХОДНОЙ ДЕНЬ';
-                document.getElementById('progressText').textContent = `0/0 уроков`; document.getElementById('progressFill').style.width = `0%`; document.getElementById('startTime').textContent = "--:--"; document.getElementById('endTime').textContent = "--:--";
-            } else {
-                const todayData = weekSchedule[dayIdx]; const todayBells = bells[todayData.bellsType];
-                document.getElementById('startTime').textContent = todayBells[0].start; document.getElementById('endTime').textContent = todayBells[todayData.lessons.length-1].end;
-                if (currentMinutes < timeToMinutes(todayBells[0].start)) {
-                    currentStatus = "Скоро в школу"; currentStatusDesc = "Пора собираться"; statusIcon = "ph-backpack"; badgeText = '<i class="ph ph-hourglass"></i> ДО НАЧАЛА УРОКОВ'; completedLessons = 0;
-                } else if (currentMinutes >= timeToMinutes(todayBells[0].start) && currentMinutes <= timeToMinutes(todayBells[todayData.lessons.length-1].end)) {
-                    for (let i = 0; i < todayData.lessons.length; i++) {
-                        const b = todayBells[i]; const start = timeToMinutes(b.start); const end = timeToMinutes(b.end);
-                        if (currentMinutes >= start && currentMinutes < end) { currentStatus = "Идет урок"; currentStatusDesc = todayData.lessons[i].name; statusIcon = "ph-book-open"; badgeText = '<i class="ph ph-book-open"></i> ИДЕТ УРОК'; completedLessons = i; break; }
-                        else if (i < todayData.lessons.length - 1 && currentMinutes >= end && currentMinutes < timeToMinutes(todayBells[i+1].start)) { currentStatus = "Перемена"; currentStatusDesc = `Следующий: ${todayData.lessons[i+1].name}`; statusIcon = "ph-coffee"; badgeText = '<i class="ph ph-coffee"></i> ПЕРЕМЕНА'; completedLessons = i + 1; break; }
+            window.openSettings = function() { document.getElementById('settingsModal').classList.add('open'); }
+            window.closeSettings = function(event) {
+                if (!event || event.target.id === 'settingsModal' || event.target.closest('.close-btn')) {
+                    document.getElementById('settingsModal').classList.remove('open');
+                }
+            }
+
+            window.setTheme = function(themeClass, btnId) {
+                document.body.classList.remove('theme-default', 'theme-newyear');
+                document.body.classList.add(themeClass);
+                document.querySelectorAll('.setting-btn[id^="btn-theme"]').forEach(b => b.classList.remove('active-theme'));
+                document.getElementById(btnId).classList.add('active-theme');
+                try { localStorage.setItem('savedTheme', themeClass); localStorage.setItem('savedThemeBtn', btnId); } catch(e){}
+            }
+
+            window.setFont = function(fontClass, btnId) {
+                document.body.classList.remove('font-inter', 'font-rubik', 'font-comfortaa', 'font-montserrat', 'font-playfair', 'font-unbounded');
+                document.body.classList.add(fontClass);
+                document.querySelectorAll('.setting-btn[id^="btn-font"]').forEach(btn => btn.classList.remove('active-font'));
+                document.getElementById(btnId).classList.add('active-font');
+                try { localStorage.setItem('savedFont', fontClass); localStorage.setItem('savedFontBtn', btnId); } catch(e){}
+            }
+
+            window.handleBgUpload = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const base64Img = e.target.result;
+                        document.body.style.backgroundImage = `url(${base64Img})`;
+                        try { localStorage.setItem('savedBg', base64Img); } catch(err) { alert("Фото слишком большое для автосохранения."); }
+                        closeSettings();
                     }
-                } else { completedLessons = todayData.lessons.length; }
-                document.getElementById('progressText').textContent = `${completedLessons}/${todayData.lessons.length} уроков`; document.getElementById('progressFill').style.width = `${(completedLessons / todayData.lessons.length) * 100}%`;
-            }
-            document.getElementById('statusTitle').textContent = currentStatus; document.getElementById('statusDesc').textContent = currentStatusDesc;
-            document.getElementById('statusIcon').innerHTML = `<i class="ph ${statusIcon}"></i>`; document.getElementById('statusBadge').innerHTML = badgeText;
-
-            if (isWeekend) {
-                document.getElementById('todayName').textContent = "Сегодня"; document.getElementById('todaySubtitle').innerHTML = `Выходной день <i class='ph-fill ph-tree-palm'></i>`;
-                document.getElementById('todayLessonsList').innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-muted);">Сегодня уроков нет. Отдыхай!</div>';
-            } else {
-                const todayData = weekSchedule[dayIdx]; const todayBells = bells[todayData.bellsType];
-                document.getElementById('todayName').textContent = "Сегодня";
-                document.getElementById('todaySubtitle').innerHTML = `<b>${daysOfWeekNames[dayIdx + 1]}</b> • ${todayData.lessons.length} уроков • ${todayBells[0].start}–${todayBells[todayData.lessons.length-1].end}`;
-                renderLessons('todayLessonsList', todayData, currentMinutes, true);
+                    reader.readAsDataURL(file);
+                }
             }
 
-            let nextIdx = dayIdx + 1; if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; 
-            const nextDayData = weekSchedule[nextIdx]; const nextBells = bells[nextDayData.bellsType];
-            if (isWeekend) document.getElementById('nextDayName').textContent = "Следующий день"; else document.getElementById('nextDayName').textContent = "Завтра"; 
-            document.getElementById('nextDaySubtitle').innerHTML = `<b>${daysOfWeekNames[nextIdx + 1]}</b> • ${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end}`;
-            renderLessons('nextDayLessonsList', nextDayData, -1, false);
+            window.resetBg = function() {
+                document.body.style.backgroundImage = 'none';
+                document.getElementById('bg-upload').value = '';
+                try { localStorage.removeItem('savedBg'); } catch(e){}
+                closeSettings();
+            }
 
-            let daysToAdd = 1;
-            if (now.getDay() === 5) daysToAdd = 3; else if (now.getDay() === 6) daysToAdd = 2; else if (now.getDay() === 0) daysToAdd = 1;
-            const targetDate = new Date(now); targetDate.setDate(now.getDate() + daysToAdd); targetDate.setHours(8, 30, 0, 0); 
-            const diffMs = targetDate - now; const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)); const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-            let countdownText = ""; if (diffDays > 0) countdownText = `${diffDays} дн. ${diffHrs} ч.`; else countdownText = `${diffHrs} ч. ${diffMins} мин.`;
-            document.getElementById('nextDayCountdown').textContent = countdownText;
+            function loadSettings() {
+                try {
+                    const savedTheme = localStorage.getItem('savedTheme');
+                    const savedThemeBtn = localStorage.getItem('savedThemeBtn');
+                    if (savedTheme && savedThemeBtn && document.getElementById(savedThemeBtn)) setTheme(savedTheme, savedThemeBtn);
+                    
+                    const savedFont = localStorage.getItem('savedFont');
+                    const savedFontBtn = localStorage.getItem('savedFontBtn');
+                    if (savedFont && savedFontBtn && document.getElementById(savedFontBtn)) setFont(savedFont, savedFontBtn);
+                    
+                    const savedBg = localStorage.getItem('savedBg');
+                    if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
+                    
+                    const savedSnow = localStorage.getItem('savedSnow');
+                    if (savedSnow === 'true') { 
+                        const toggle = document.getElementById('snow-toggle');
+                        if(toggle) toggle.checked = true; 
+                        toggleSnow(true); 
+                    }
+                } catch(e) {
+                    console.warn("Не удалось загрузить настройки (возможно, запрещен localStorage)");
+                }
+            }
+
+            window.openWeekModal = function() {
+                const now = getMoscowDate(); let dayIdx = now.getDay() - 1;
+                if (dayIdx < 0 || dayIdx > 4) dayIdx = 0;
+                selectedTabDay = dayIdx; renderWeekModal(); document.getElementById('weekModal').classList.add('open');
+            }
+            window.closeWeekModal = function(event) {
+                if (!event || event.target.id === 'weekModal' || event.target.closest('.close-btn')) document.getElementById('weekModal').classList.remove('open');
+            }
+
+            function renderWeekModal() {
+                const tabsContainer = document.getElementById('weekTabs'); const listContainer = document.getElementById('modalLessonsList');
+                tabsContainer.innerHTML = ''; const now = getMoscowDate(); let todayIdx = now.getDay() - 1;
+                for (let i = 0; i < 5; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = `week-tab ${i === selectedTabDay ? 'active' : ''} ${i === todayIdx ? 'today' : ''}`;
+                    btn.textContent = shortDays[i]; btn.onclick = () => { selectedTabDay = i; renderWeekModal(); };
+                    tabsContainer.appendChild(btn);
+                }
+                const dayData = weekSchedule[selectedTabDay]; const currentBells = bells[dayData.bellsType]; listContainer.innerHTML = '';
+                dayData.lessons.forEach((lesson, idx) => {
+                    const time = currentBells[idx]; const item = document.createElement('div'); item.className = 'modal-lesson-item';
+                    item.innerHTML = `<div class="modal-lesson-time"><span>${time.start}</span><span>${time.end}</span></div><div class="modal-lesson-icon"><i class="ph ${lesson.icon}"></i></div><div class="modal-lesson-info"><span class="modal-lesson-name">${lesson.name}</span><span class="modal-lesson-num">Урок ${idx + 1}</span></div>`;
+                    listContainer.appendChild(item);
+                });
+            }
+
+            function renderLessons(containerId, dayData, currentMinutes, isCurrentDay) {
+                const container = document.getElementById(containerId); const currentBells = bells[dayData.bellsType]; container.innerHTML = '';
+                dayData.lessons.forEach((lesson, i) => {
+                    const bell = currentBells[i]; const item = document.createElement('div'); item.className = 'lesson-item';
+                    if (isCurrentDay) {
+                        if (currentMinutes >= timeToMinutes(bell.end)) item.classList.add('passed');
+                        else if (currentMinutes >= timeToMinutes(bell.start) && currentMinutes < timeToMinutes(bell.end)) item.classList.add('active');
+                    }
+                    item.innerHTML = `<div class="lesson-time"><span>${bell.start}</span><span>${bell.end}</span></div><div class="lesson-icon"><i class="ph ${lesson.icon}"></i></div><div class="lesson-info"><span class="lesson-name">${lesson.name}</span><span class="lesson-num">Урок ${i + 1}</span></div>`;
+                    container.appendChild(item);
+                });
+            }
+
+            function updateUI() {
+                const now = getMoscowDate(); document.getElementById('currentTime').textContent = now.toLocaleTimeString('ru-RU');
+                const months = ["ЯНВАРЯ", "ФЕВРАЛЯ", "МАРТА", "АПРЕЛЯ", "МАЯ", "ИЮНЯ", "ИЮЛЯ", "АВГУСТА", "СЕНТЯБРЯ", "ОКТЯБРЯ", "НОЯБРЯ", "ДЕКАБРЯ"];
+                document.getElementById('currentDate').textContent = `${daysOfWeekNames[now.getDay()].toUpperCase()}, ${now.getDate()} ${months[now.getMonth()]}`;
+                const hour = now.getHours();
+                let greetHTML = '<i class="ph ph-sun"></i> Доброе утро';
+                if (hour >= 12 && hour < 18) greetHTML = '<i class="ph ph-sun-horizon"></i> Добрый день'; else if (hour >= 18) greetHTML = '<i class="ph ph-moon"></i> Добрый вечер';
+                document.getElementById('greeting').innerHTML = greetHTML;
+                let dayIdx = now.getDay() - 1; const isWeekend = (dayIdx < 0 || dayIdx > 4); const currentMinutes = hour * 60 + now.getMinutes();
+                let currentStatus = "Свобода!", currentStatusDesc = "Уроки на сегодня закончились", statusIcon = "ph-confetti", badgeText = '<i class="ph ph-confetti"></i> УРОКИ ЗАКОНЧИЛИСЬ', completedLessons = 0;
+                if (isWeekend) {
+                    currentStatus = "Выходной!"; currentStatusDesc = "Отдыхай, завтра в школу"; statusIcon = "ph-tree-palm"; badgeText = '<i class="ph ph-tree-palm"></i> ВЫХОДНОЙ ДЕНЬ';
+                    document.getElementById('progressText').textContent = `0/0 уроков`; document.getElementById('progressFill').style.width = `0%`; document.getElementById('startTime').textContent = "--:--"; document.getElementById('endTime').textContent = "--:--";
+                } else {
+                    const todayData = weekSchedule[dayIdx]; const todayBells = bells[todayData.bellsType];
+                    document.getElementById('startTime').textContent = todayBells[0].start; document.getElementById('endTime').textContent = todayBells[todayData.lessons.length-1].end;
+                    if (currentMinutes < timeToMinutes(todayBells[0].start)) {
+                        currentStatus = "Скоро в школу"; currentStatusDesc = "Пора собираться"; statusIcon = "ph-backpack"; badgeText = '<i class="ph ph-hourglass"></i> ДО НАЧАЛА УРОКОВ'; completedLessons = 0;
+                    } else if (currentMinutes >= timeToMinutes(todayBells[0].start) && currentMinutes <= timeToMinutes(todayBells[todayData.lessons.length-1].end)) {
+                        for (let i = 0; i < todayData.lessons.length; i++) {
+                            const b = todayBells[i]; const start = timeToMinutes(b.start); const end = timeToMinutes(b.end);
+                            if (currentMinutes >= start && currentMinutes < end) { currentStatus = "Идет урок"; currentStatusDesc = todayData.lessons[i].name; statusIcon = "ph-book-open"; badgeText = '<i class="ph ph-book-open"></i> ИДЕТ УРОК'; completedLessons = i; break; }
+                            else if (i < todayData.lessons.length - 1 && currentMinutes >= end && currentMinutes < timeToMinutes(todayBells[i+1].start)) { currentStatus = "Перемена"; currentStatusDesc = `Следующий: ${todayData.lessons[i+1].name}`; statusIcon = "ph-coffee"; badgeText = '<i class="ph ph-coffee"></i> ПЕРЕМЕНА'; completedLessons = i + 1; break; }
+                        }
+                    } else { completedLessons = todayData.lessons.length; }
+                    document.getElementById('progressText').textContent = `${completedLessons}/${todayData.lessons.length} уроков`; document.getElementById('progressFill').style.width = `${(completedLessons / todayData.lessons.length) * 100}%`;
+                }
+                document.getElementById('statusTitle').textContent = currentStatus; document.getElementById('statusDesc').textContent = currentStatusDesc;
+                document.getElementById('statusIcon').innerHTML = `<i class="ph ${statusIcon}"></i>`; document.getElementById('statusBadge').innerHTML = badgeText;
+
+                if (isWeekend) {
+                    document.getElementById('todayName').textContent = "Сегодня"; document.getElementById('todaySubtitle').innerHTML = `Выходной день <i class='ph-fill ph-tree-palm'></i>`;
+                    document.getElementById('todayLessonsList').innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-muted);">Сегодня уроков нет. Отдыхай!</div>';
+                } else {
+                    const todayData = weekSchedule[dayIdx]; const todayBells = bells[todayData.bellsType];
+                    document.getElementById('todayName').textContent = "Сегодня";
+                    document.getElementById('todaySubtitle').innerHTML = `<b>${daysOfWeekNames[dayIdx + 1]}</b> • ${todayData.lessons.length} уроков • ${todayBells[0].start}–${todayBells[todayData.lessons.length-1].end}`;
+                    renderLessons('todayLessonsList', todayData, currentMinutes, true);
+                }
+
+                let nextIdx = dayIdx + 1; if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; 
+                const nextDayData = weekSchedule[nextIdx]; const nextBells = bells[nextDayData.bellsType];
+                if (isWeekend) document.getElementById('nextDayName').textContent = "Следующий день"; else document.getElementById('nextDayName').textContent = "Завтра"; 
+                document.getElementById('nextDaySubtitle').innerHTML = `<b>${daysOfWeekNames[nextIdx + 1]}</b> • ${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end}`;
+                renderLessons('nextDayLessonsList', nextDayData, -1, false);
+
+                let daysToAdd = 1;
+                if (now.getDay() === 5) daysToAdd = 3; else if (now.getDay() === 6) daysToAdd = 2; else if (now.getDay() === 0) daysToAdd = 1;
+                const targetDate = new Date(now); targetDate.setDate(now.getDate() + daysToAdd); targetDate.setHours(8, 30, 0, 0); 
+                const diffMs = targetDate - now; const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)); const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                let countdownText = ""; if (diffDays > 0) countdownText = `${diffDays} дн. ${diffHrs} ч.`; else countdownText = `${diffHrs} ч. ${diffMins} мин.`;
+                document.getElementById('nextDayCountdown').textContent = countdownText;
+            }
+
+            // Запуск
+            loadSettings(); 
+            updateUI();
+            setInterval(updateUI, 1000);
+            
+        } catch(e) {
+            // Если что-то пошло не так, выводим ошибку прямо на экран
+            document.getElementById('statusTitle').textContent = "Ошибка!";
+            document.getElementById('statusDesc').textContent = e.message;
+            document.getElementById('statusDesc').style.color = "red";
+            document.getElementById('statusIcon').innerHTML = '<i class="ph ph-warning" style="color:red"></i>';
         }
-
-        loadSettings(); setInterval(updateUI, 1000); updateUI();
     </script>
 </body>
 </html>
