@@ -5,30 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Школьное расписание</title>
     
-    <!-- Шрифты и иконки -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
         :root {
-            --bg-main: #0f0f13; --bg-card: rgba(26, 26, 33, 0.95); --bg-item: #212129;
-            --text-main: #ffffff; --text-muted: #8b8b9a; --accent-purple: #a855f7; 
-            --accent-green: #22c55e; --accent-blue: #3b82f6; --border-color: #2f2f3b;
+            --bg-main: #0a0a0f; 
+            --bg-card: rgba(22, 22, 30, 0.75); /* Сделал чуть плотнее для читаемости */
+            --bg-item: rgba(40, 40, 55, 0.85);
+            --text-main: #ffffff; --text-muted: #9a9aad; 
+            --accent-purple: #b86bff; 
+            --accent-green: #2dd4bf; --accent-blue: #3b82f6; --border-color: rgba(255, 255, 255, 0.08);
             --font-family: 'Inter', sans-serif;
+            --shadow: 0 10px 40px -10px rgba(0,0,0,0.7);
         }
+        
         /* 🎄 Новогодняя тема 🎄 */
         body.theme-newyear {
-            --bg-main: #0a1410; --bg-card: rgba(18, 33, 26, 0.95); --bg-item: #172e22;
-            --text-main: #f2fbf5; --text-muted: #81a690; --accent-purple: #eab308; 
-            --accent-green: #10b981; --accent-blue: #34d399; --border-color: #234533;
+            --bg-main: #050a08; --bg-card: rgba(14, 30, 24, 0.85); --bg-item: rgba(25, 50, 40, 0.85);
+            --text-main: #f2fbf5; --text-muted: #8abca0; --accent-purple: #eab308; 
+            --accent-green: #10b981; --accent-blue: #34d399; --border-color: rgba(234, 179, 8, 0.15);
         }
         body.theme-newyear .date-badge { background-color: rgba(234, 179, 8, 0.1); border-color: rgba(234, 179, 8, 0.2); color: var(--accent-purple); }
         body.theme-newyear .status-badge, body.theme-newyear .header-icon { background-color: rgba(234, 179, 8, 0.15); color: var(--accent-purple); border-color: rgba(234, 179, 8, 0.2); }
         body.theme-newyear .big-status-icon { background-color: rgba(234, 179, 8, 0.05); border-color: rgba(234, 179, 8, 0.2); }
         body.theme-newyear .big-status-icon i { color: var(--accent-purple); }
         body.theme-newyear .status-progress-bar-fill { background: linear-gradient(90deg, #10b981, #eab308); }
+        body.theme-newyear .gdz-link { background: rgba(234, 179, 8, 0.15); color: var(--accent-purple); border: 1px solid rgba(234, 179, 8, 0.3); }
 
         body.font-inter { --font-family: 'Inter', sans-serif; }
         body.font-rubik { --font-family: 'Rubik', sans-serif; }
@@ -38,154 +43,244 @@
         body.font-unbounded { --font-family: 'Unbounded', cursive; }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); -webkit-tap-highlight-color: transparent; }
+        
         body {
             background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center;
             padding: 20px; min-height: 100vh; background-size: cover; background-position: center;
             background-attachment: fixed; position: relative; transition: background-color 0.5s ease, color 0.3s ease;
         }
+        
+        /* Легкий блюр и затемнение, чтобы фото было видно, но текст читался */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(10, 10, 15, 0.75); z-index: -1; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); pointer-events: none; transition: background 0.5s ease;
+            background: rgba(5, 5, 10, 0.45); 
+            backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+            z-index: -1; pointer-events: none; transition: background 0.5s ease;
         }
-        body.theme-newyear::before { background: rgba(4, 15, 10, 0.8); }
+        body.theme-newyear::before { background: rgba(2, 8, 5, 0.55); }
 
         #snow-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998; overflow: hidden; display: none; }
         .snowflake { position: absolute; top: -10px; color: #fff; user-select: none; pointer-events: none; animation: fall linear forwards; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
         .app-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; padding-bottom: 40px; position: relative; z-index: 1; }
+        
+        /* Шапка */
         .header { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; padding: 0 5px; }
-        .logo-placeholder { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
+        .logo-placeholder { 
+            width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); 
+            border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; 
+            box-shadow: 0 4px 20px rgba(184, 107, 255, 0.4); cursor: pointer; transition: transform 0.2s; 
+        }
         .logo-placeholder:active { transform: scale(0.9); }
-        .header-text h1 { font-size: 19px; font-weight: 700; }
-        .header-text p { font-size: 13px; color: var(--text-muted); }
+        .header-text h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+        .header-text p { font-size: 13px; color: var(--text-muted); font-weight: 500; }
 
-        .card { background-color: var(--bg-card); border-radius: 24px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all 0.3s ease; overflow: hidden; }
-        .status-card { padding: 20px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); margin-bottom: 15px; font-weight: 500; }
+        /* Док кнопок нейросетей */
+        .ai-tools { 
+            display: flex; gap: 10px; padding: 6px; background: var(--bg-card); 
+            border: 1px solid var(--border-color); border-radius: 20px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            box-shadow: var(--shadow);
+        }
+        .ai-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: transparent; border: 1px solid transparent;
+            color: var(--text-main); text-decoration: none; font-size: 13px; font-weight: 600;
+            padding: 12px; border-radius: 14px; transition: 0.3s; cursor: pointer;
+        }
+        .ai-btn:hover { background: var(--bg-item); border-color: var(--border-color); }
+        .ai-btn i { font-size: 18px; color: var(--accent-purple); }
+
+        /* Карточки */
+        .card { 
+            background-color: var(--bg-card); border-radius: 24px; border: 1px solid var(--border-color); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            transition: all 0.3s ease; overflow: hidden; box-shadow: var(--shadow);
+        }
+        
+        /* Статус дня */
+        .status-card { padding: 24px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; }
         .greeting-wrap { display: flex; align-items: center; gap: 6px; }
-        .greeting-wrap i { font-size: 16px; color: var(--accent-purple); }
-        .date-badge { display: inline-block; background-color: rgba(168, 85, 247, 0.1); color: var(--text-muted); padding: 6px 14px; border-radius: 12px; font-size: 11px; margin-bottom: 15px; border: 1px solid rgba(168, 85, 247, 0.2); text-transform: uppercase; font-weight: 600; }
-        .status-badge { display: inline-flex; align-items: center; gap: 6px; background-color: rgba(168, 85, 247, 0.15); color: var(--accent-purple); padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 20px; }
+        .greeting-wrap i { font-size: 18px; color: var(--accent-purple); }
+        .date-badge { display: inline-block; background-color: rgba(168, 85, 247, 0.1); color: var(--text-main); padding: 6px 14px; border-radius: 12px; font-size: 11px; margin-bottom: 20px; border: 1px solid var(--border-color); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; background-color: rgba(184, 107, 255, 0.15); color: var(--accent-purple); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(184, 107, 255, 0.1); }
         .status-badge i { font-size: 16px; }
-        .big-status { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; }
-        .big-status-icon { width: 76px; height: 76px; background-color: var(--bg-item); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); flex-shrink: 0; }
-        .big-status-icon i { font-size: 36px; color: var(--accent-purple); }
-        .big-status-text h2 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-        .big-status-text p { color: var(--text-muted); font-size: 14px; }
+        
+        .big-status { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
+        .big-status-icon { width: 80px; height: 80px; background: var(--bg-item); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); flex-shrink: 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+        .big-status-icon i { font-size: 40px; color: var(--accent-purple); filter: drop-shadow(0 0 10px rgba(184, 107, 255, 0.5)); }
+        .big-status-text h2 { font-size: 32px; font-weight: 800; margin-bottom: 6px; letter-spacing: -1px; }
+        .big-status-text p { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
-        .status-progress-wrapper { border-top: 1px solid var(--border-color); padding-top: 15px; margin-top: 5px; }
-        .status-progress-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
-        .status-progress-header span:first-child { display: flex; align-items: center; gap: 4px; }
-        .status-progress-bar-bg { height: 6px; background-color: var(--bg-item); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
-        .status-progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-green), #eab308, var(--accent-purple)); width: 0%; transition: width 1s ease; border-radius: 3px; }
-        .status-progress-times { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-weight: 500; }
+        /* Прогресс */
+        .status-progress-wrapper { border-top: 1px solid var(--border-color); padding-top: 18px; margin-top: 5px; }
+        .status-progress-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+        .status-progress-header span:first-child { display: flex; align-items: center; gap: 6px; }
+        .status-progress-bar-bg { height: 8px; background-color: var(--bg-item); border-radius: 4px; overflow: hidden; margin-bottom: 8px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); }
+        .status-progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-green), var(--accent-purple)); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 4px; }
+        .status-progress-times { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); font-weight: 600; }
 
-        .collapsible-header, .week-btn-card { display: flex; align-items: center; justify-content: space-between; padding: 20px; cursor: pointer; user-select: none; }
+        /* Сворачиваемые карточки и кнопки (ЕДИНЫЙ СТИЛЬ) */
+        .collapsible-header { display: flex; align-items: center; justify-content: space-between; padding: 22px; cursor: pointer; user-select: none; }
         .header-title-group { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
-        .header-icon { width: 46px; height: 46px; background-color: rgba(168, 85, 247, 0.1); color: var(--accent-purple); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 1px solid rgba(168, 85, 247, 0.2); flex-shrink: 0; }
+        .header-icon { width: 48px; height: 48px; background-color: rgba(184, 107, 255, 0.1); color: var(--accent-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 1px solid var(--border-color); flex-shrink: 0; transition: 0.3s; }
+        .collapsible-header:hover .header-icon, .card[onclick]:hover .header-icon { background-color: rgba(184, 107, 255, 0.2); }
+        
         .header-info { display: flex; flex-direction: column; min-width: 0; }
-        .header-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;}
-        .header-info p { font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .header-info p i { font-size: 14px; }
+        .header-info h3 { font-size: 18px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.3px;}
+        .header-info p { font-size: 13px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
         .header-right-info { text-align: right; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; padding-left: 10px; }
-        .header-right-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
-        .header-right-value { font-size: 15px; color: var(--accent-purple); font-weight: 700; white-space: nowrap; }
-        .chevron { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; color: var(--text-muted); margin-left: 10px; font-size: 18px; flex-shrink: 0; }
-        .collapsible-card.open .chevron { transform: rotate(180deg); }
+        .header-right-label { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;}
+        .header-right-value { font-size: 16px; color: var(--accent-purple); font-weight: 800; white-space: nowrap; filter: drop-shadow(0 0 5px rgba(184, 107, 255, 0.3)); }
+        
+        .chevron { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); margin-left: 10px; font-size: 18px; flex-shrink: 0; background: var(--bg-item); border-radius: 50%; }
+        .card.open .chevron { transform: rotate(180deg); }
 
-        .collapsible-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 0 20px; }
-        .collapsible-card.open .collapsible-body { max-height: 1500px; padding-bottom: 20px; }
+        .collapsible-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 0 22px; }
+        .card.open .collapsible-body { max-height: 1500px; padding-bottom: 22px; }
 
-        .lessons-list { display: flex; flex-direction: column; gap: 8px; }
-        .lesson-item { display: flex; align-items: center; background-color: var(--bg-item); border-radius: 16px; padding: 14px 16px; border: 1px solid transparent; transition: 0.2s; }
-        .lesson-item.active { border-color: var(--accent-purple); box-shadow: 0 0 15px rgba(168, 85, 247, 0.1); background-color: rgba(168, 85, 247, 0.05); }
-        .lesson-item.passed { opacity: 0.4; }
-        .lesson-time { display: flex; flex-direction: column; width: 55px; font-size: 14px; font-weight: 600; flex-shrink: 0; }
-        .lesson-time span:last-child { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
-        .lesson-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 16px; color: var(--text-main); flex-shrink: 0; }
-        .lesson-info { display: flex; flex-direction: column; min-width: 0; }
-        .lesson-name { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .lesson-num { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
+        /* Список уроков */
+        .lessons-list { display: flex; flex-direction: column; gap: 10px; }
+        .lesson-item { 
+            display: flex; align-items: center; background-color: var(--bg-item); border-radius: 18px; 
+            padding: 14px 16px; border: 1px solid transparent; transition: 0.3s; 
+        }
+        .lesson-item.active { 
+            border-color: var(--accent-purple); box-shadow: 0 0 20px rgba(184, 107, 255, 0.15); 
+            background-color: rgba(184, 107, 255, 0.08); transform: scale(1.02);
+        }
+        .lesson-item.passed { opacity: 0.4; filter: grayscale(1); }
+        
+        .lesson-time { display: flex; flex-direction: column; width: 60px; font-size: 15px; font-weight: 800; flex-shrink: 0; }
+        .lesson-time span:last-child { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+        .lesson-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 16px; color: var(--accent-purple); flex-shrink: 0; }
+        
+        .lesson-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+        .lesson-name { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lesson-num { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 600; }
 
-        .info-row { display: flex; align-items: center; gap: 15px; padding: 16px 20px; background-color: var(--bg-card); border-radius: 18px; border: 1px solid var(--border-color); font-size: 14px; font-weight: 500; backdrop-filter: blur(10px); }
-        .info-row i { font-size: 20px; color: var(--accent-purple); flex-shrink: 0; }
+        /* Кнопка ГДЗ */
+        .gdz-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(184, 107, 255, 0.15); color: var(--accent-purple);
+            padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: 800;
+            text-decoration: none; flex-shrink: 0; transition: 0.2s; margin-left: 10px;
+            border: 1px solid rgba(184, 107, 255, 0.3); box-shadow: 0 2px 10px rgba(184, 107, 255, 0.1);
+        }
+        .gdz-link:hover { background: rgba(184, 107, 255, 0.25); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(184, 107, 255, 0.2); }
+        .gdz-link i { font-size: 16px; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; }
+        /* Инфо строка (праздники в самом низу) */
+        .info-row { 
+            display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px; 
+            background-color: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); 
+            font-size: 13px; font-weight: 600; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            box-shadow: var(--shadow); margin-top: 10px; color: var(--text-muted);
+        }
+        .info-row i { font-size: 18px; color: var(--accent-purple); flex-shrink: 0; }
+
+        /* Модалки */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); 
+            display: flex; justify-content: center; align-items: center; 
+            z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; 
+        }
         .modal-overlay.open { opacity: 1; pointer-events: auto; }
-        .modal-content { background-color: var(--bg-card); width: 100%; max-width: 420px; max-height: 85vh; border-radius: 28px; padding: 24px; overflow-y: auto; transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid var(--border-color); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-content { 
+            background-color: var(--bg-card); width: 100%; max-width: 440px; max-height: 85vh; 
+            border-radius: 32px; padding: 26px; overflow-y: auto; 
+            transform: scale(0.9) translateY(30px); opacity: 0; 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 1px solid var(--border-color); box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); 
+        }
         .modal-overlay.open .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-        .modal-header-custom { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .modal-title-left { display: flex; align-items: center; gap: 12px; }
-        .modal-title-icon { width: 44px; height: 44px; background-color: rgba(168, 85, 247, 0.15); color: var(--accent-purple); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-        .modal-title-text h2 { font-size: 18px; font-weight: 700; }
-        .modal-title-text p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-        .close-btn { background: var(--bg-item); border: none; color: var(--text-main); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-        .close-btn:hover { background: #ef4444; color: white; }
+        
+        .modal-header-custom { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .modal-title-left { display: flex; align-items: center; gap: 14px; }
+        .modal-title-icon { width: 48px; height: 48px; background: rgba(184, 107, 255, 0.15); color: var(--accent-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .modal-title-text h2 { font-size: 20px; font-weight: 800; }
+        .modal-title-text p { font-size: 13px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+        .close-btn { background: var(--bg-item); border: none; color: var(--text-main); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .close-btn:hover { background: #ef4444; color: white; transform: rotate(90deg); }
 
-        .week-tabs-container { background: var(--bg-item); padding: 5px; border-radius: 16px; display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .week-tab { flex: 1; background: transparent; border: none; color: var(--text-muted); padding: 8px 0; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative; }
-        .week-tab.active { background-color: var(--bg-card); color: var(--accent-purple); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .week-tab.active.today::after { content: ''; display: inline-block; width: 6px; height: 6px; background-color: var(--accent-green); border-radius: 50%; margin-left: 4px; vertical-align: middle; position: absolute; top: 10px; right: 8px; }
+        .week-tabs-container { background: var(--bg-item); padding: 6px; border-radius: 18px; display: flex; justify-content: space-between; margin-bottom: 24px; }
+        .week-tab { flex: 1; background: transparent; border: none; color: var(--text-muted); padding: 10px 0; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .week-tab.active { background-color: var(--bg-card); color: var(--accent-purple); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .week-tab.active.today::after { content: ''; display: inline-block; width: 6px; height: 6px; background-color: var(--accent-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; position: absolute; top: 12px; right: 10px; box-shadow: 0 0 5px var(--accent-green); }
 
-        .modal-lessons-list { display: flex; flex-direction: column; gap: 8px; }
-        .modal-lesson-item { display: flex; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--border-color); border-radius: 12px; }
+        .modal-lessons-list { display: flex; flex-direction: column; gap: 10px; }
+        .modal-lesson-item { display: flex; align-items: center; padding: 14px 12px; border-bottom: 1px solid var(--border-color); border-radius: 16px; transition: 0.2s; }
+        .modal-lesson-item:hover { background: var(--bg-item); }
         .modal-lesson-item:last-child { border-bottom: none; }
-        .modal-lesson-time { display: flex; flex-direction: column; width: 60px; font-size: 14px; font-weight: 600; }
+        .modal-lesson-time { display: flex; flex-direction: column; width: 65px; font-size: 14px; font-weight: 700; }
         .modal-lesson-time span:last-child { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-        .modal-lesson-icon { width: 30px; font-size: 20px; margin: 0 15px; text-align: center; color: var(--text-main);}
+        .modal-lesson-icon { width: 34px; font-size: 22px; margin: 0 16px; text-align: center; color: var(--accent-purple);}
         .modal-lesson-info { display: flex; flex-direction: column; }
-        .modal-lesson-name { font-size: 15px; font-weight: 600; }
-        .modal-lesson-num { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .modal-lesson-name { font-size: 15px; font-weight: 700; }
+        .modal-lesson-num { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
 
-        .settings-list { display: flex; flex-direction: column; gap: 20px; }
-        .settings-section h3 { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
-        .setting-btn { display: flex; align-items: center; justify-content: space-between; background: var(--bg-item); border: 1px solid var(--border-color); padding: 14px 16px; border-radius: 14px; color: var(--text-main); font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; width: 100%; margin-bottom: 8px; }
+        /* Настройки */
+        .settings-list { display: flex; flex-direction: column; gap: 24px; }
+        .settings-section h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .setting-btn { 
+            display: flex; align-items: center; justify-content: space-between; 
+            background: var(--bg-item); border: 1px solid var(--border-color); 
+            padding: 16px; border-radius: 16px; color: var(--text-main); 
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; margin-bottom: 10px; 
+        }
         .setting-btn:hover { background: rgba(255,255,255,0.05); }
-        .setting-btn.active-font, .setting-btn.active-theme { border-color: var(--accent-purple); background: rgba(168, 85, 247, 0.1); }
-        .btn-icon-label { display: flex; align-items: center; gap: 10px; }
-        .btn-icon-label i { font-size: 18px; }
+        .setting-btn.active-font, .setting-btn.active-theme { border-color: var(--accent-purple); background: rgba(184, 107, 255, 0.1); box-shadow: 0 0 15px rgba(184, 107, 255, 0.1); }
+        .btn-icon-label { display: flex; align-items: center; gap: 12px; }
+        .btn-icon-label i { font-size: 20px; }
 
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-item); padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-color); }
-        .toggle-switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-item); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--accent-green); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-purple); }
+        input:checked + .slider:before { transform: translateX(22px); }
+        
         #bg-upload { display: none; }
-        .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
         @media (max-width: 480px) {
-            body { padding: 10px; }
+            body { padding: 12px; }
             .app-container { gap: 12px; }
-            .status-card { padding: 16px; }
-            .big-status { gap: 12px; margin-bottom: 15px; }
-            .big-status-icon { width: 60px; height: 60px; }
-            .big-status-icon i { font-size: 28px; }
-            .big-status-text h2 { font-size: 22px; }
-            .big-status-text p { font-size: 12px; }
-            .collapsible-header, .week-btn-card { padding: 16px; }
-            .header-icon { width: 40px; height: 40px; font-size: 20px; border-radius: 12px; }
+            .status-card { padding: 20px; }
+            .big-status { gap: 14px; margin-bottom: 20px; }
+            .big-status-icon { width: 64px; height: 64px; }
+            .big-status-icon i { font-size: 32px; }
+            .big-status-text h2 { font-size: 24px; }
+            .big-status-text p { font-size: 13px; }
+            .collapsible-header { padding: 16px; }
+            .header-icon { width: 42px; height: 42px; font-size: 20px; border-radius: 14px; }
             .header-title-group { gap: 12px; }
             .header-info h3 { font-size: 16px; }
-            .header-info p { font-size: 11px; }
+            .header-info p { font-size: 12px; }
             .header-right-label { font-size: 9px; }
-            .header-right-value { font-size: 13px; }
+            .header-right-value { font-size: 14px; }
             .collapsible-body { padding: 0 16px; }
-            .collapsible-card.open .collapsible-body { padding-bottom: 16px; }
+            .card.open .collapsible-body { padding-bottom: 16px; }
             .lesson-item { padding: 12px; }
-            .lesson-time { width: 45px; font-size: 13px; }
+            .lesson-time { width: 50px; font-size: 14px; }
             .lesson-time span:last-child { font-size: 11px; }
-            .lesson-icon { margin: 0 10px; font-size: 18px; }
+            .lesson-icon { margin: 0 12px; font-size: 20px; }
             .lesson-name { font-size: 14px; }
             .lesson-num { font-size: 11px; }
-            .info-row { padding: 12px 16px; font-size: 13px; gap: 10px; }
-            .modal-content { padding: 16px; border-radius: 24px; max-height: 90vh; }
-            .week-tab { font-size: 12px; padding: 6px 0; }
-            .modal-lesson-time { width: 50px; font-size: 13px; }
+            .gdz-link { padding: 6px 10px; font-size: 10px; }
+            .info-row { padding: 14px; font-size: 12px; }
+            .modal-content { padding: 20px; border-radius: 28px; max-height: 90vh; }
+            .week-tab { font-size: 13px; padding: 8px 0; }
+            .modal-lesson-time { width: 55px; font-size: 13px; }
             .modal-lesson-name { font-size: 14px; }
-            .setting-btn, .toggle-row { padding: 12px; font-size: 13px; }
+            .setting-btn, .toggle-row { padding: 14px; font-size: 14px; }
+            .ai-btn { font-size: 12px; padding: 10px; }
         }
     </style>
 </head>
@@ -194,6 +289,8 @@
     <div id="snow-container"></div>
 
     <div class="app-container">
+        
+        <!-- Шапка -->
         <div class="header">
             <div class="logo-placeholder" onclick="openSettings()"><i class="ph-fill ph-graduation-cap"></i></div>
             <div class="header-text">
@@ -202,6 +299,13 @@
             </div>
         </div>
 
+        <!-- Кнопки нейросетей -->
+        <div class="ai-tools">
+            <a href="https://chatgpt.com" target="_blank" class="ai-btn"><i class="ph ph-sparkle"></i> ChatGPT</a>
+            <a href="https://chat.deepseek.com" target="_blank" class="ai-btn"><i class="ph ph-brain"></i> DeepSeek</a>
+        </div>
+
+        <!-- Статус дня -->
         <div class="card status-card">
             <div class="card-header">
                 <span class="greeting-wrap" id="greeting"></span>
@@ -233,12 +337,8 @@
             </div>
         </div>
 
-        <div class="info-row">
-            <i class="ph ph-confetti"></i>
-            <span>Ближайший праздник <strong>Новогодние каникулы</strong></span>
-        </div>
-
-        <div class="card collapsible-card open" id="todayCard">
+        <!-- Сегодня -->
+        <div class="card open" id="todayCard">
             <div class="collapsible-header" onclick="toggleCard('todayCard')">
                 <div class="header-title-group">
                     <div class="header-icon"><i class="ph ph-calendar-blank"></i></div>
@@ -254,17 +354,22 @@
             </div>
         </div>
 
-        <div class="card week-btn-card" onclick="openWeekModal()">
-            <div class="header-title-group">
-                <div class="header-icon"><i class="ph ph-calendar-dots"></i></div>
-                <div class="header-info">
-                    <h3>Расписание на неделю</h3>
+        <!-- Расписание на неделю (Теперь выглядит как другие кнопки) -->
+        <div class="card" onclick="openWeekModal()" style="cursor: pointer;">
+            <div class="collapsible-header" style="padding-bottom: 22px;">
+                <div class="header-title-group">
+                    <div class="header-icon"><i class="ph ph-calendar-dots"></i></div>
+                    <div class="header-info">
+                        <h3>Расписание на неделю</h3>
+                        <p>Посмотреть все дни</p>
+                    </div>
                 </div>
+                <div class="chevron" style="transform: none;"><i class="ph ph-caret-right"></i></div>
             </div>
-            <div class="chevron" style="transform: rotate(-90deg);"><i class="ph ph-caret-right"></i></div>
         </div>
 
-        <div class="card collapsible-card" id="nextDayCard">
+        <!-- Следующий день -->
+        <div class="card" id="nextDayCard">
             <div class="collapsible-header" onclick="toggleCard('nextDayCard')">
                 <div class="header-title-group">
                     <div class="header-icon"><i class="ph ph-calendar-check"></i></div>
@@ -285,16 +390,24 @@
                 <div class="lessons-list" id="nextDayLessonsList"></div>
             </div>
         </div>
+
+        <!-- Праздники в самом низу -->
+        <div class="info-row">
+            <i class="ph ph-confetti"></i>
+            <span>Ближайший праздник: <strong>Новогодние каникулы</strong></span>
+        </div>
+
     </div>
 
+    <!-- Модалка Расписание на неделю -->
     <div class="modal-overlay" id="weekModal" onclick="closeWeekModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header-custom">
                 <div class="modal-title-left">
                     <div class="modal-title-icon"><i class="ph ph-calendar-dots"></i></div>
                     <div class="modal-title-text">
-                        <h2>Расписание на неделю</h2>
-                        <p>Выбери день</p>
+                        <h2>Расписание</h2>
+                        <p>Выбери день недели</p>
                     </div>
                 </div>
                 <button class="close-btn" onclick="closeWeekModal()"><i class="ph ph-x"></i></button>
@@ -304,6 +417,7 @@
         </div>
     </div>
 
+    <!-- Модалка Настройки -->
     <div class="modal-overlay" id="settingsModal" onclick="closeSettings(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header-custom">
@@ -311,7 +425,7 @@
                     <div class="modal-title-icon"><i class="ph ph-gear"></i></div>
                     <div class="modal-title-text">
                         <h2>Настройки</h2>
-                        <p>Внешний вид</p>
+                        <p>Персонализация</p>
                     </div>
                 </div>
                 <button class="close-btn" onclick="closeSettings()"><i class="ph ph-x"></i></button>
@@ -320,9 +434,9 @@
             <div class="settings-list">
                 <div class="settings-section">
                     <h3>Темы и Эффекты</h3>
-                    <div class="font-grid" style="margin-bottom: 8px;">
+                    <div class="font-grid" style="margin-bottom: 10px;">
                         <button class="setting-btn active-theme" id="btn-theme-default" onclick="setTheme('theme-default', 'btn-theme-default')"><span class="btn-icon-label"><i class="ph ph-moon"></i> Темная</span></button>
-                        <button class="setting-btn" id="btn-theme-newyear" onclick="setTheme('theme-newyear', 'btn-theme-newyear')"><span class="btn-icon-label"><i class="ph ph-tree-evergreen"></i> Новогодняя</span></button>
+                        <button class="setting-btn" id="btn-theme-newyear" onclick="setTheme('theme-newyear', 'btn-theme-newyear')"><span class="btn-icon-label"><i class="ph ph-tree-evergreen"></i> НГ</span></button>
                     </div>
                     <div class="toggle-row">
                         <span class="btn-icon-label"><i class="ph ph-snowflake"></i> Падающий снег</span>
@@ -333,17 +447,17 @@
                     </div>
                 </div>
                 <div class="settings-section">
-                    <h3>Кастомный фон</h3>
+                    <h3>Свой фон</h3>
                     <input type="file" id="bg-upload" accept="image/*" onchange="handleBgUpload(event)">
                     <button class="setting-btn" onclick="document.getElementById('bg-upload').click()">
                         <span class="btn-icon-label"><i class="ph ph-image"></i> Загрузить фото</span><span><i class="ph ph-arrow-right"></i></span>
                     </button>
                     <button class="setting-btn" onclick="resetBg()" style="color: #ef4444; margin-bottom: 0;">
-                        <span class="btn-icon-label"><i class="ph ph-trash"></i> Сбросить фон</span>
+                        <span class="btn-icon-label"><i class="ph ph-trash"></i> Сбросить</span>
                     </button>
                 </div>
                 <div class="settings-section">
-                    <h3>Шрифт интерфейса</h3>
+                    <h3>Шрифт</h3>
                     <div class="font-grid">
                         <button class="setting-btn active-font" id="btn-font-inter" onclick="setFont('font-inter', 'btn-font-inter')">Inter</button>
                         <button class="setting-btn" id="btn-font-rubik" onclick="setFont('font-rubik', 'btn-font-rubik')">Rubik</button>
@@ -365,24 +479,22 @@
             };
 
             const weekSchedule = {
-                0: { bellsType: 'type1', lessons: [ { name: "Разговор о важном", icon: "ph-chat-teardrop-text" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Физ-ра", icon: "ph-gear" }, { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Вероятность и статистика", icon: "ph-chart-bar" }, { name: "Рус.яз.", icon: "ph-book-open-text" } ]},
-                1: { bellsType: 'type2', lessons: [ { name: "Ист.", icon: "ph-bank" }, { name: "Рус.яз.", icon: "ph-book-open-text" }, { name: "Англ.яз./2", icon: "ph-translate" }, { name: "Физ.", icon: "ph-atom" }, { name: "Геом.", icon: "ph-compass" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Лит-ра", icon: "ph-books" } ]},
-                2: { bellsType: 'type2', lessons: [ { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Рус.яз.", icon: "ph-book-open-text" }, { name: "Ист.", icon: "ph-bank" }, { name: "Хим.", icon: "ph-flask" }, { name: "Черч.", icon: "ph-pencil-ruler" }, { name: "Техн./Гр.2", icon: "ph-wrench" }, { name: "Алг.", icon: "ph-math-operations" } ]},
-                3: { bellsType: 'type1', lessons: [ { name: "Профминимум", icon: "ph-briefcase" }, { name: "Лит-ра", icon: "ph-books" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Инф./гр 2", icon: "ph-laptop" }, { name: "ОБЗР", icon: "ph-shield-check" }, { name: "Геом.", icon: "ph-compass" }, { name: "Англ.яз./2", icon: "ph-translate" } ]},
-                4: { bellsType: 'type2', lessons: [ { name: "Хим.", icon: "ph-flask" }, { name: "Ист.", icon: "ph-bank" }, { name: "Муз.", icon: "ph-music-notes" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Алг.", icon: "ph-math-operations" }, { name: "Англ.яз./2", icon: "ph-translate" } ]}
+                1: { bellsType: 'type1', lessons: [ { name: "Разговор о важном", icon: "ph-chat-teardrop-text" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Физ-ра", icon: "ph-gear" }, { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Алг.", icon: "ph-math-operations", gdz: "https://reshak.ru/reshebniki/algebra/8/merzlyak_polyakov/index.html" }, { name: "Вероятность и статистика", icon: "ph-chart-bar" }, { name: "Рус.яз.", icon: "ph-book-open-text", gdz: "https://reshak.ru/reshebniki/russkijazik/8/barh_new/index.html" } ]},
+                2: { bellsType: 'type2', lessons: [ { name: "Ист.", icon: "ph-bank" }, { name: "Рус.яз.", icon: "ph-book-open-text", gdz: "https://reshak.ru/reshebniki/russkijazik/8/barh_new/index.html" }, { name: "Англ.яз./2", icon: "ph-translate", gdz: "https://reshak.ru/rainbow8/index.html" }, { name: "Физ.", icon: "ph-atom" }, { name: "Геом.", icon: "ph-compass", gdz: "https://reshak.ru/reshebniki/geometriya/7/atanasyan/index.php" }, { name: "Алг.", icon: "ph-math-operations", gdz: "https://reshak.ru/reshebniki/algebra/8/merzlyak_polyakov/index.html" }, { name: "Лит-ра", icon: "ph-books" } ]},
+                3: { bellsType: 'type2', lessons: [ { name: "Геогр.", icon: "ph-globe-hemisphere-west" }, { name: "Рус.яз.", icon: "ph-book-open-text", gdz: "https://reshak.ru/reshebniki/russkijazik/8/barh_new/index.html" }, { name: "Ист.", icon: "ph-bank" }, { name: "Хим.", icon: "ph-flask" }, { name: "Черч.", icon: "ph-pencil-ruler" }, { name: "Техн./Гр.2", icon: "ph-wrench" }, { name: "Алг.", icon: "ph-math-operations", gdz: "https://reshak.ru/reshebniki/algebra/8/merzlyak_polyakov/index.html" } ]},
+                4: { bellsType: 'type1', lessons: [ { name: "Профминимум", icon: "ph-briefcase" }, { name: "Лит-ра", icon: "ph-books" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Инф./гр 2", icon: "ph-laptop" }, { name: "ОБЗР", icon: "ph-shield-check" }, { name: "Геом.", icon: "ph-compass", gdz: "https://reshak.ru/reshebniki/geometriya/7/atanasyan/index.php" }, { name: "Англ.яз./2", icon: "ph-translate", gdz: "https://reshak.ru/rainbow8/index.html" } ]},
+                5: { bellsType: 'type2', lessons: [ { name: "Хим.", icon: "ph-flask" }, { name: "Ист.", icon: "ph-bank" }, { name: "Муз.", icon: "ph-music-notes" }, { name: "Физ-ра", icon: "ph-person-simple-run" }, { name: "Биол.", icon: "ph-leaf" }, { name: "Алг.", icon: "ph-math-operations", gdz: "https://reshak.ru/reshebniki/algebra/8/merzlyak_polyakov/index.html" }, { name: "Англ.яз./2", icon: "ph-translate", gdz: "https://reshak.ru/rainbow8/index.html" } ]}
             };
 
             const daysOfWeekNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
             const shortDays = ["Пн", "Вт", "Ср", "Чт", "Пт"];
-            let selectedTabDay = 0;
+            let selectedTabDay = 1;
 
             function getMoscowDate() {
                 try {
                     const mskString = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
                     return new Date(mskString);
-                } catch(e) {
-                    return new Date();
-                }
+                } catch(e) { return new Date(); }
             }
 
             function timeToMinutes(timeStr) {
@@ -390,50 +502,36 @@
                 return h * 60 + m;
             }
 
-            window.toggleCard = function(cardId) { 
-                document.getElementById(cardId).classList.toggle('open'); 
-            }
+            window.toggleCard = function(cardId) { document.getElementById(cardId).classList.toggle('open'); }
 
             let snowInterval;
             window.toggleSnow = function(isEnabled) {
                 const container = document.getElementById('snow-container');
                 try { localStorage.setItem('savedSnow', isEnabled); } catch(e){}
-                
                 if (isEnabled) {
                     container.style.display = 'block';
                     snowInterval = setInterval(() => {
-                        const flake = document.createElement('div');
-                        flake.classList.add('snowflake');
+                        const flake = document.createElement('div'); flake.classList.add('snowflake');
                         flake.innerHTML = ['❄️', '❅', '❆', '•'][Math.floor(Math.random() * 4)];
                         flake.style.left = Math.random() * 100 + 'vw';
                         flake.style.animationDuration = (Math.random() * 3 + 2) + 's';
                         flake.style.opacity = Math.random() * 0.5 + 0.5;
                         flake.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
-                        container.appendChild(flake);
-                        setTimeout(() => { flake.remove(); }, 5000);
+                        container.appendChild(flake); setTimeout(() => { flake.remove(); }, 5000);
                     }, 150);
-                } else {
-                    container.style.display = 'none';
-                    clearInterval(snowInterval);
-                    container.innerHTML = '';
-                }
+                } else { container.style.display = 'none'; clearInterval(snowInterval); container.innerHTML = ''; }
             }
 
             window.openSettings = function() { document.getElementById('settingsModal').classList.add('open'); }
             window.closeSettings = function(event) {
-                if (!event || event.target.id === 'settingsModal' || event.target.closest('.close-btn')) {
-                    document.getElementById('settingsModal').classList.remove('open');
-                }
+                if (!event || event.target.id === 'settingsModal' || event.target.closest('.close-btn')) document.getElementById('settingsModal').classList.remove('open');
             }
-
             window.setTheme = function(themeClass, btnId) {
-                document.body.classList.remove('theme-default', 'theme-newyear');
-                document.body.classList.add(themeClass);
+                document.body.classList.remove('theme-default', 'theme-newyear'); document.body.classList.add(themeClass);
                 document.querySelectorAll('.setting-btn[id^="btn-theme"]').forEach(b => b.classList.remove('active-theme'));
                 document.getElementById(btnId).classList.add('active-theme');
                 try { localStorage.setItem('savedTheme', themeClass); localStorage.setItem('savedThemeBtn', btnId); } catch(e){}
             }
-
             window.setFont = function(fontClass, btnId) {
                 document.body.classList.remove('font-inter', 'font-rubik', 'font-comfortaa', 'font-montserrat', 'font-playfair', 'font-unbounded');
                 document.body.classList.add(fontClass);
@@ -441,55 +539,39 @@
                 document.getElementById(btnId).classList.add('active-font');
                 try { localStorage.setItem('savedFont', fontClass); localStorage.setItem('savedFontBtn', btnId); } catch(e){}
             }
-
             window.handleBgUpload = function(event) {
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        const base64Img = e.target.result;
-                        document.body.style.backgroundImage = `url(${base64Img})`;
-                        try { localStorage.setItem('savedBg', base64Img); } catch(err) { alert("Фото слишком большое для автосохранения."); }
+                        const base64Img = e.target.result; document.body.style.backgroundImage = `url(${base64Img})`;
+                        try { localStorage.setItem('savedBg', base64Img); } catch(err) { alert("Фото слишком большое."); }
                         closeSettings();
                     }
                     reader.readAsDataURL(file);
                 }
             }
-
             window.resetBg = function() {
-                document.body.style.backgroundImage = 'none';
-                document.getElementById('bg-upload').value = '';
-                try { localStorage.removeItem('savedBg'); } catch(e){}
-                closeSettings();
+                document.body.style.backgroundImage = 'none'; document.getElementById('bg-upload').value = '';
+                try { localStorage.removeItem('savedBg'); } catch(e){} closeSettings();
             }
 
             function loadSettings() {
                 try {
-                    const savedTheme = localStorage.getItem('savedTheme');
-                    const savedThemeBtn = localStorage.getItem('savedThemeBtn');
+                    const savedTheme = localStorage.getItem('savedTheme'); const savedThemeBtn = localStorage.getItem('savedThemeBtn');
                     if (savedTheme && savedThemeBtn && document.getElementById(savedThemeBtn)) setTheme(savedTheme, savedThemeBtn);
-                    
-                    const savedFont = localStorage.getItem('savedFont');
-                    const savedFontBtn = localStorage.getItem('savedFontBtn');
+                    const savedFont = localStorage.getItem('savedFont'); const savedFontBtn = localStorage.getItem('savedFontBtn');
                     if (savedFont && savedFontBtn && document.getElementById(savedFontBtn)) setFont(savedFont, savedFontBtn);
-                    
                     const savedBg = localStorage.getItem('savedBg');
                     if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
-                    
                     const savedSnow = localStorage.getItem('savedSnow');
-                    if (savedSnow === 'true') { 
-                        const toggle = document.getElementById('snow-toggle');
-                        if(toggle) toggle.checked = true; 
-                        toggleSnow(true); 
-                    }
-                } catch(e) {
-                    console.warn("Не удалось загрузить настройки");
-                }
+                    if (savedSnow === 'true') { document.getElementById('snow-toggle').checked = true; toggleSnow(true); }
+                } catch(e) {}
             }
 
             window.openWeekModal = function() {
-                const now = getMoscowDate(); let dayIdx = now.getDay() - 1;
-                if (dayIdx < 0 || dayIdx > 4) dayIdx = 0;
+                const now = getMoscowDate(); let dayIdx = now.getDay();
+                if (dayIdx === 0 || dayIdx === 6) dayIdx = 1; 
                 selectedTabDay = dayIdx; renderWeekModal(); document.getElementById('weekModal').classList.add('open');
             }
             window.closeWeekModal = function(event) {
@@ -498,16 +580,18 @@
 
             function renderWeekModal() {
                 const tabsContainer = document.getElementById('weekTabs'); const listContainer = document.getElementById('modalLessonsList');
-                tabsContainer.innerHTML = ''; const now = getMoscowDate(); let todayIdx = now.getDay() - 1;
-                for (let i = 0; i < 5; i++) {
+                tabsContainer.innerHTML = ''; const now = getMoscowDate(); let todayIdx = now.getDay();
+                for (let i = 1; i <= 5; i++) {
                     const btn = document.createElement('button');
                     btn.className = `week-tab ${i === selectedTabDay ? 'active' : ''} ${i === todayIdx ? 'today' : ''}`;
-                    btn.textContent = shortDays[i]; btn.onclick = () => { selectedTabDay = i; renderWeekModal(); };
+                    btn.textContent = shortDays[i-1]; btn.onclick = () => { selectedTabDay = i; renderWeekModal(); };
                     tabsContainer.appendChild(btn);
                 }
+                
                 const dayData = weekSchedule[selectedTabDay]; const currentBells = bells[dayData.bellsType]; listContainer.innerHTML = '';
                 dayData.lessons.forEach((lesson, idx) => {
-                    const time = currentBells[idx]; const item = document.createElement('div'); item.className = 'modal-lesson-item';
+                    const time = currentBells[idx]; 
+                    const item = document.createElement('div'); item.className = 'modal-lesson-item';
                     item.innerHTML = `<div class="modal-lesson-time"><span>${time.start}</span><span>${time.end}</span></div><div class="modal-lesson-icon"><i class="ph ${lesson.icon}"></i></div><div class="modal-lesson-info"><span class="modal-lesson-name">${lesson.name}</span><span class="modal-lesson-num">Урок ${idx + 1}</span></div>`;
                     listContainer.appendChild(item);
                 });
@@ -516,12 +600,27 @@
             function renderLessons(containerId, dayData, currentMinutes, isCurrentDay) {
                 const container = document.getElementById(containerId); const currentBells = bells[dayData.bellsType]; container.innerHTML = '';
                 dayData.lessons.forEach((lesson, i) => {
-                    const bell = currentBells[i]; const item = document.createElement('div'); item.className = 'lesson-item';
+                    const bell = currentBells[i]; 
+                    const item = document.createElement('div'); item.className = 'lesson-item';
                     if (isCurrentDay) {
                         if (currentMinutes >= timeToMinutes(bell.end)) item.classList.add('passed');
                         else if (currentMinutes >= timeToMinutes(bell.start) && currentMinutes < timeToMinutes(bell.end)) item.classList.add('active');
                     }
-                    item.innerHTML = `<div class="lesson-time"><span>${bell.start}</span><span>${bell.end}</span></div><div class="lesson-icon"><i class="ph ${lesson.icon}"></i></div><div class="lesson-info"><span class="lesson-name">${lesson.name}</span><span class="lesson-num">Урок ${i + 1}</span></div>`;
+                    
+                    let gdzHTML = '';
+                    if (!isCurrentDay && lesson.gdz) {
+                        gdzHTML = `<a href="${lesson.gdz}" target="_blank" class="gdz-link" onclick="event.stopPropagation()"><i class="ph ph-book-bookmark"></i> ГДЗ</a>`;
+                    }
+
+                    item.innerHTML = `
+                        <div class="lesson-time"><span>${bell.start}</span><span>${bell.end}</span></div>
+                        <div class="lesson-icon"><i class="ph ${lesson.icon}"></i></div>
+                        <div class="lesson-info">
+                            <span class="lesson-name">${lesson.name}</span>
+                            <span class="lesson-num">Урок ${i + 1}</span>
+                        </div>
+                        ${gdzHTML}
+                    `;
                     container.appendChild(item);
                 });
             }
@@ -530,19 +629,28 @@
                 const now = getMoscowDate(); document.getElementById('currentTime').textContent = now.toLocaleTimeString('ru-RU');
                 const months = ["ЯНВАРЯ", "ФЕВРАЛЯ", "МАРТА", "АПРЕЛЯ", "МАЯ", "ИЮНЯ", "ИЮЛЯ", "АВГУСТА", "СЕНТЯБРЯ", "ОКТЯБРЯ", "НОЯБРЯ", "ДЕКАБРЯ"];
                 document.getElementById('currentDate').textContent = `${daysOfWeekNames[now.getDay()].toUpperCase()}, ${now.getDate()} ${months[now.getMonth()]}`;
+                
                 const hour = now.getHours();
                 let greetHTML = '<i class="ph ph-sun"></i> Доброе утро';
                 if (hour >= 12 && hour < 18) greetHTML = '<i class="ph ph-sun-horizon"></i> Добрый день'; else if (hour >= 18) greetHTML = '<i class="ph ph-moon"></i> Добрый вечер';
                 document.getElementById('greeting').innerHTML = greetHTML;
                 
-                let dayIdx = now.getDay() - 1; 
-                const isWeekend = (dayIdx < 0 || dayIdx > 4); 
+                let dayIdx = now.getDay(); 
+                const isWeekend = (dayIdx === 0 || dayIdx === 6); 
                 const currentMinutes = hour * 60 + now.getMinutes();
                 
                 let currentStatus = "Свобода!", currentStatusDesc = "Уроки на сегодня закончились", statusIcon = "ph-confetti", badgeText = '<i class="ph ph-confetti"></i> УРОКИ ЗАКОНЧИЛИСЬ', completedLessons = 0;
                 
                 if (isWeekend) {
-                    currentStatus = "Выходной!"; currentStatusDesc = "Отдыхай, завтра в школу"; statusIcon = "ph-tree-palm"; badgeText = '<i class="ph ph-tree-palm"></i> ВЫХОДНОЙ ДЕНЬ';
+                    currentStatus = "Выходной!"; 
+                    statusIcon = "ph-tree-palm"; 
+                    badgeText = '<i class="ph ph-tree-palm"></i> ВЫХОДНОЙ ДЕНЬ';
+                    
+                    if (dayIdx === 6) {
+                        currentStatusDesc = "Отдыхай, послезавтра в школу"; 
+                    } else {
+                        currentStatusDesc = "Отдыхай, завтра в школу"; 
+                    }
                     document.getElementById('progressText').textContent = `0/0 уроков`; document.getElementById('progressFill').style.width = `0%`; document.getElementById('startTime').textContent = "--:--"; document.getElementById('endTime').textContent = "--:--";
                 } else {
                     const todayData = weekSchedule[dayIdx]; const todayBells = bells[todayData.bellsType];
@@ -564,43 +672,53 @@
 
                 if (isWeekend) {
                     document.getElementById('todayName').textContent = "Сегодня"; document.getElementById('todaySubtitle').innerHTML = `Выходной день <i class='ph-fill ph-tree-palm'></i>`;
-                    document.getElementById('todayLessonsList').innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-muted);">Сегодня уроков нет. Отдыхай!</div>';
+                    document.getElementById('todayLessonsList').innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-muted); font-weight:500;">Сегодня уроков нет. Отдыхай!</div>';
                 } else {
                     const todayData = weekSchedule[dayIdx]; const todayBells = bells[todayData.bellsType];
                     document.getElementById('todayName').textContent = "Сегодня";
-                    document.getElementById('todaySubtitle').innerHTML = `<b>${daysOfWeekNames[dayIdx + 1]}</b> • ${todayData.lessons.length} уроков • ${todayBells[0].start}–${todayBells[todayData.lessons.length-1].end}`;
+                    document.getElementById('todaySubtitle').innerHTML = `<b>${daysOfWeekNames[dayIdx]}</b> • ${todayData.lessons.length} уроков • ${todayBells[0].start}–${todayBells[todayData.lessons.length-1].end}`;
                     renderLessons('todayLessonsList', todayData, currentMinutes, true);
                 }
 
-                // ---------- ИСПРАВЛЕННАЯ ЛОГИКА СЛЕДУЮЩЕГО ДНЯ ----------
                 let nextIdx = dayIdx + 1; 
-                if (nextIdx > 4 || nextIdx < 0) nextIdx = 0; 
-                
-                const nextDayData = weekSchedule[nextIdx]; 
-                const nextBells = bells[nextDayData.bellsType];
+                if (nextIdx > 5 || nextIdx === 0) nextIdx = 1; 
+                const nextDayData = weekSchedule[nextIdx]; const nextBells = bells[nextDayData.bellsType];
                 
                 let nextDayTitle = "Следующий день";
-                if (dayIdx >= 0 && dayIdx < 4) {
-                    nextDayTitle = "Завтра"; // Если Пн-Чт
-                } else if (dayIdx === 4) {
-                    nextDayTitle = "В понедельник"; // Если Пятница
-                } else {
-                    nextDayTitle = "Следующий день"; // Выходные
+                if (dayIdx >= 1 && dayIdx < 5) {
+                    nextDayTitle = "Завтра"; 
+                } else if (dayIdx === 5) {
+                    nextDayTitle = "В понедельник"; 
+                } else if (dayIdx === 6) {
+                    nextDayTitle = "Послезавтра"; 
+                } else if (dayIdx === 0) {
+                    nextDayTitle = "Завтра"; 
                 }
                 
                 document.getElementById('nextDayName').textContent = nextDayTitle;
-                document.getElementById('nextDaySubtitle').innerHTML = `<b>${daysOfWeekNames[nextIdx + 1]}</b> • ${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end}`;
+                document.getElementById('nextDaySubtitle').innerHTML = `<b>${daysOfWeekNames[nextIdx]}</b> • ${nextDayData.lessons.length} уроков • ${nextBells[0].start}–${nextBells[nextDayData.lessons.length-1].end}`;
+                
                 renderLessons('nextDayLessonsList', nextDayData, -1, false);
 
                 let daysToAdd = 1;
-                if (now.getDay() === 5) daysToAdd = 3; else if (now.getDay() === 6) daysToAdd = 2; else if (now.getDay() === 0) daysToAdd = 1;
-                const targetDate = new Date(now); targetDate.setDate(now.getDate() + daysToAdd); targetDate.setHours(8, 30, 0, 0); 
-                const diffMs = targetDate - now; const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)); const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                let countdownText = ""; if (diffDays > 0) countdownText = `${diffDays} дн. ${diffHrs} ч.`; else countdownText = `${diffHrs} ч. ${diffMins} мин.`;
+                if (dayIdx === 5) daysToAdd = 3; else if (dayIdx === 6) daysToAdd = 2; else if (dayIdx === 0) daysToAdd = 1;
+                
+                const targetDate = new Date(now); 
+                targetDate.setDate(now.getDate() + daysToAdd); 
+                targetDate.setHours(8, 30, 0, 0); 
+                
+                const diffMs = targetDate - now; 
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)); 
+                const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); 
+                const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                let countdownText = ""; 
+                if (diffDays > 0) countdownText = `${diffDays} дн. ${diffHrs} ч.`; 
+                else countdownText = `${diffHrs} ч. ${diffMins} мин.`;
+                
                 document.getElementById('nextDayCountdown').textContent = countdownText;
             }
 
-            // Запуск
             loadSettings(); 
             updateUI();
             setInterval(updateUI, 1000);
